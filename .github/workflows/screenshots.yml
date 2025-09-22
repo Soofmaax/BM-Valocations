@@ -28,9 +28,33 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Capture screenshots from production (desktop + tablet + mobile)
+      - name: Check production availability
+        id: prodcheck
+        run: |
+          set -e
+          if curl -sSfI https://bm-valocations.com/ >/dev/null; then
+            echo "ok=true" >> $GITHUB_OUTPUT
+          else
+            echo "ok=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build and preview locally (fallback)
+        if: steps.prodcheck.outputs.ok != 'true'
+        run: |
+          npm run build
+          nohup npm run preview:ci >/dev/null 2>&1 &
+          for i in {1..30}; do
+            if curl -sSf http://127.0.0.1:4173 >/dev/null; then
+              echo "Preview server is up."
+              break
+            fi
+            echo "Waiting for preview server..."
+            sleep 2
+          done
+
+      - name: Capture screenshots (desktop + tablet + mobile)
         env:
-          BASE_URL: https://bm-valocations.com
+          BASE_URL: ${{ steps.prodcheck.outputs.ok == 'true' && 'https://bm-valocations.com' || 'http://127.0.0.1:4173' }}
           SCREENSHOTS_DESKTOP: '1'
           SCREENSHOTS_TABLET: '1'
           SCREENSHOTS_MOBILE: '1'

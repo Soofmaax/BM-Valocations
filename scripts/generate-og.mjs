@@ -23,92 +23,94 @@ async function renderToPng(svg) {
   return resvg.render().asPng();
 }
 
+function baseCanvas(children) {
+  return {
+    type: 'div',
+    props: {
+      style: {
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        position: 'relative',
+        background: '#111827',
+        color: '#ffffff',
+        padding: '64px',
+        alignItems: 'center',
+      },
+      children: [
+        ...children,
+        {
+          type: 'div',
+          props: {
+            style: {
+              position: 'absolute',
+              right: '48px',
+              bottom: '48px',
+              width: '220px',
+              height: '220px',
+              borderRadius: '9999px',
+              background:
+                'radial-gradient(circle at 30% 30%, rgba(245,158,11,0.5), rgba(245,158,11,0.15) 60%, transparent 70%)',
+              filter: 'blur(2px)',
+            },
+          },
+        },
+      ],
+    },
+  };
+}
+
 async function generateBaseImage(fonts) {
   const svg = await satori(
-    {
-      type: 'div',
-      props: {
-        style: {
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          position: 'relative',
-          background: '#111827',
-          color: '#ffffff',
-          padding: '64px',
-          alignItems: 'center',
+    baseCanvas([
+      {
+        type: 'div',
+        props: {
+          style: { display: 'flex', flexDirection: 'column', maxWidth: '1000px' },
+          children: [
+            {
+              type: 'div',
+              props: {
+                style: {
+                  fontSize: 84,
+                  fontWeight: 800,
+                  letterSpacing: '-2px',
+                  lineHeight: 1.05,
+                  fontFamily: 'Sora',
+                },
+                children: 'BM-VA Locations',
+              },
+            },
+            {
+              type: 'div',
+              props: {
+                style: {
+                  marginTop: 16,
+                  fontSize: 40,
+                  color: '#f59e0b',
+                  fontWeight: 700,
+                  fontFamily: 'Sora',
+                },
+                children: 'Premium Car Rental',
+              },
+            },
+            {
+              type: 'div',
+              props: {
+                style: {
+                  marginTop: 12,
+                  fontSize: 24,
+                  color: '#d1d5db',
+                  fontWeight: 400,
+                  fontFamily: 'Sora',
+                },
+                children: 'Reliable, luxury and economy vehicles',
+              },
+            },
+          ],
         },
-        children: [
-          {
-            type: 'div',
-            props: {
-              style: {
-                display: 'flex',
-                flexDirection: 'column',
-                maxWidth: '1000px',
-              },
-              children: [
-                {
-                  type: 'div',
-                  props: {
-                    style: {
-                      fontSize: 84,
-                      fontWeight: 800,
-                      letterSpacing: '-2px',
-                      lineHeight: 1.05,
-                      fontFamily: 'Sora',
-                    },
-                    children: 'BM-VA Locations',
-                  },
-                },
-                {
-                  type: 'div',
-                  props: {
-                    style: {
-                      marginTop: 16,
-                      fontSize: 40,
-                      color: '#f59e0b',
-                      fontWeight: 700,
-                      fontFamily: 'Sora',
-                    },
-                    children: 'Premium Car Rental',
-                  },
-                },
-                {
-                  type: 'div',
-                  props: {
-                    style: {
-                      marginTop: 12,
-                      fontSize: 24,
-                      color: '#d1d5db',
-                      fontWeight: 400,
-                      fontFamily: 'Sora',
-                    },
-                    children: 'Reliable, luxury and economy vehicles',
-                  },
-                },
-              ],
-            },
-          },
-          {
-            type: 'div',
-            props: {
-              style: {
-                position: 'absolute',
-                right: '48px',
-                bottom: '48px',
-                width: '220px',
-                height: '220px',
-                borderRadius: '9999px',
-                background:
-                  'radial-gradient(circle at 30% 30%, rgba(245,158,11,0.5), rgba(245,158,11,0.15) 60%, transparent 70%)',
-                filter: 'blur(2px)',
-              },
-            },
-          },
-        ],
       },
-    },
+    ]),
     { width, height, fonts }
   );
 
@@ -117,90 +119,112 @@ async function generateBaseImage(fonts) {
 
 async function generateFleetImage(fonts) {
   const svg = await satori(
-    {
-      type: 'div',
-      props: {
-        style: {
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          position: 'relative',
-          background: '#111827',
-          color: '#ffffff',
-          padding: '64px',
-          alignItems: 'center',
+    baseCanvas([
+      {
+        type: 'div',
+        props: {
+          style: { display: 'flex', flexDirection: 'column', maxWidth: '1000px' },
+          children: [
+            {
+              type: 'div',
+              props: {
+                style: {
+                  fontSize: 78,
+                  fontWeight: 800,
+                  letterSpacing: '-2px',
+                  lineHeight: 1.05,
+                  fontFamily: 'Sora',
+                },
+                children: 'Our Fleet',
+              },
+            },
+            {
+              type: 'div',
+              props: {
+                style: {
+                  marginTop: 16,
+                  fontSize: 40,
+                  color: '#f59e0b',
+                  fontWeight: 700,
+                  fontFamily: 'Sora',
+                },
+                children: 'BM-VA Locations',
+              },
+            },
+            {
+              type: 'div',
+              props: {
+                style: {
+                  marginTop: 12,
+                  fontSize: 24,
+                  color: '#d1d5db',
+                  fontWeight: 400,
+                  fontFamily: 'Sora',
+                },
+                children: 'Economy • Premium • SUV • Van',
+              },
+            },
+          ],
         },
-        children: [
-          {
-            type: 'div',
-            props: {
-              style: {
-                display: 'flex',
-                flexDirection: 'column',
-                maxWidth: '1000px',
-              },
-              children: [
-                {
-                  type: 'div',
-                  props: {
-                    style: {
-                      fontSize: 78,
-                      fontWeight: 800,
-                      letterSpacing: '-2px',
-                      lineHeight: 1.05,
-                      fontFamily: 'Sora',
-                    },
-                    children: 'Our Fleet',
-                  },
-                },
-                {
-                  type: 'div',
-                  props: {
-                    style: {
-                      marginTop: 16,
-                      fontSize: 40,
-                      color: '#f59e0b',
-                      fontWeight: 700,
-                      fontFamily: 'Sora',
-                    },
-                    children: 'BM-VA Locations',
-                  },
-                },
-                {
-                  type: 'div',
-                  props: {
-                    style: {
-                      marginTop: 12,
-                      fontSize: 24,
-                      color: '#d1d5db',
-                      fontWeight: 400,
-                      fontFamily: 'Sora',
-                    },
-                    children: 'Economy • Premium • SUV • Van',
-                  },
-                },
-              ],
-            },
-          },
-          {
-            type: 'div',
-            props: {
-              style: {
-                position: 'absolute',
-                right: '48px',
-                bottom: '48px',
-                width: '220px',
-                height: '220px',
-                borderRadius: '9999px',
-                background:
-                  'radial-gradient(circle at 30% 30%, rgba(245,158,11,0.5), rgba(245,158,11,0.15) 60%, transparent 70%)',
-                filter: 'blur(2px)',
-              },
-            },
-          },
-        ],
       },
-    },
+    ]),
+    { width, height, fonts }
+  );
+
+  return renderToPng(svg);
+}
+
+async function generateSupportImage(fonts) {
+  const svg = await satori(
+    baseCanvas([
+      {
+        type: 'div',
+        props: {
+          style: { display: 'flex', flexDirection: 'column', maxWidth: '1000px' },
+          children: [
+            {
+              type: 'div',
+              props: {
+                style: {
+                  fontSize: 78,
+                  fontWeight: 800,
+                  letterSpacing: '-2px',
+                  lineHeight: 1.05,
+                  fontFamily: 'Sora',
+                },
+                children: 'Support',
+              },
+            },
+            {
+              type: 'div',
+              props: {
+                style: {
+                  marginTop: 16,
+                  fontSize: 40,
+                  color: '#f59e0b',
+                  fontWeight: 700,
+                  fontFamily: 'Sora',
+                },
+                children: 'BM-VA Locations',
+              },
+            },
+            {
+              type: 'div',
+              props: {
+                style: {
+                  marginTop: 12,
+                  fontSize: 24,
+                  color: '#d1d5db',
+                  fontWeight: 400,
+                  fontFamily: 'Sora',
+                },
+                children: 'We’re here to help',
+              },
+            },
+          ],
+        },
+      },
+    ]),
     { width, height, fonts }
   );
 
@@ -218,22 +242,25 @@ async function main() {
     { name: 'Sora', data: soraBold, weight: 800, style: 'normal' },
   ];
 
-  const [basePng, fleetPng] = await Promise.all([
+  const [basePng, fleetPng, supportPng] = await Promise.all([
     generateBaseImage(fonts),
     generateFleetImage(fonts),
+    generateSupportImage(fonts),
   ]);
 
   await mkdir(path.resolve('public'), { recursive: true });
   const baseOut = path.resolve('public/og-image.png');
   const fleetOut = path.resolve('public/og-fleet.png');
+  const supportOut = path.resolve('public/og-support.png');
 
-  await Promise.all([
-    writeFile(baseOut, basePng),
-    writeFile(fleetOut, fleetPng),
-  ]);
+  await Promise.all([writeFile(baseOut, basePng), writeFile(fleetOut, fleetPng), writeFile(supportOut, supportPng)]);
 
   // eslint-disable-next-line no-console
-  console.log(`OG images generated at ${baseOut} and ${fleetOut} (${width}x${height})`);
+  console.log(`OG images generated at:
+  - ${baseOut}
+  - ${fleetOut}
+  - ${supportOut}
+(${width}x${height})`);
 }
 
 main().catch((err) => {

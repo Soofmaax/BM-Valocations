@@ -3,14 +3,29 @@ import ButtonLink from '../components/ui/ButtonLink';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 
 export default function Support() {
+  const description = 'Support and contact information for BM-VA Locations.';
+
   return (
     <section aria-labelledby="support-heading" className="space-y-6 max-w-xl">
       <Helmet>
         <title>Support — BM-VA</title>
-        <meta
-          name="description"
-          content="Support and contact information for BM-VA Locations."
-        />
+        <meta name="description" content={description} />
+
+        {/* Social sharing overrides for Support page */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://bm-valocations.com/support" />
+        <meta property="og:title" content="Support — BM-VA Locations" />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content="https://bm-valocations.com/og-support.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:type" content="image/png" />
+
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://bm-valocations.com/support" />
+        <meta property="twitter:title" content="Support — BM-VA Locations" />
+        <meta property="twitter:description" content={description} />
+        <meta property="twitter:image" content="https://bm-valocations.com/og-support.png" />
       </Helmet>
 
       <h2 id="support-heading" className="text-xl font-semibold">

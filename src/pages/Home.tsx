@@ -1,9 +1,18 @@
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { vehicles } from '../data/vehicles';
 
 export default function Home() {
   return (
     <section aria-labelledby="home-heading" className="space-y-6">
+      <Helmet>
+        <title>BM-VA — Premium Car Rental</title>
+        <meta
+          name="description"
+          content="Premium, reliable car rental services. Explore economy, premium, SUV and van categories."
+        />
+      </Helmet>
+
       <h2 id="home-heading" className="text-xl font-semibold">
         Welcome to BM-VA Locations
       </h2>

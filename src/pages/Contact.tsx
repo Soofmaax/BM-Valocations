@@ -1,6 +1,16 @@
+import { Helmet } from 'react-helmet-async';
+
 export default function Contact() {
   return (
     <section aria-labelledby="contact-heading" className="space-y-6 max-w-xl">
+      <Helmet>
+        <title>Contact — BM-VA</title>
+        <meta
+          name="description"
+          content="Get in touch with BM-VA Locations regarding bookings, fleet information, or support."
+        />
+      </Helmet>
+
       <h2 id="contact-heading" className="text-xl font-semibold">
         Contact us
       </h2>
@@ -25,6 +35,7 @@ export default function Contact() {
             name="name"
             required
             type="text"
+            autoComplete="name"
             className="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-800"
           />
         </div>
@@ -38,6 +49,7 @@ export default function Contact() {
             name="email"
             required
             type="email"
+            autoComplete="email"
             className="mt-1 w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-800"
           />
         </div>

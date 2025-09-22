@@ -1,8 +1,17 @@
+import { Helmet } from 'react-helmet-async';
 import { vehicles } from '../data/vehicles';
 
 export default function Fleet() {
   return (
     <section aria-labelledby="fleet-heading" className="space-y-4">
+      <Helmet>
+        <title>Fleet — BM-VA</title>
+        <meta
+          name="description"
+          content="Browse our fleet of economy, premium, SUV and van vehicles available for rent."
+        />
+      </Helmet>
+
       <h2 id="fleet-heading" className="text-xl font-semibold">
         Our Fleet
       </h2>

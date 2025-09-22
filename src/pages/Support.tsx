@@ -2,27 +2,27 @@ import { Helmet } from 'react-helmet-async';
 import ButtonLink from '../components/ui/ButtonLink';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 
-export default function Contact() {
+export default function Support() {
   return (
-    <section aria-labelledby="contact-heading" className="space-y-6 max-w-xl">
+    <section aria-labelledby="support-heading" className="space-y-6 max-w-xl">
       <Helmet>
-        <title>Contact — BM-VA</title>
+        <title>Support — BM-VA</title>
         <meta
           name="description"
-          content="Contact information and support details for BM-VA Locations."
+          content="Support and contact information for BM-VA Locations."
         />
       </Helmet>
 
-      <h2 id="contact-heading" className="text-xl font-semibold">
-        Contact us
+      <h2 id="support-heading" className="text-xl font-semibold">
+        Support
       </h2>
       <p className="text-gray-600">
         The client requested no contact form. You can reach us using the information below.
       </p>
 
-      <Card aria-labelledby="contact-info-title">
+      <Card aria-labelledby="support-info-title">
         <CardHeader>
-          <CardTitle id="contact-info-title" className="text-lg">
+          <CardTitle id="support-info-title" className="text-lg">
             Contact information
           </CardTitle>
         </CardHeader>

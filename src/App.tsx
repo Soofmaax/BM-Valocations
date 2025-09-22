@@ -7,7 +7,7 @@ import RouteFocusHandler from './components/RouteFocusHandler';
 
 const Home = lazy(() => import('./pages/Home'));
 const Fleet = lazy(() => import('./pages/Fleet'));
-const Contact = lazy(() => import('./pages/Contact'));
+const Support = lazy(() => import('./pages/Support'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
@@ -51,7 +51,7 @@ export default function App() {
                 Fleet
               </NavLink>
               <NavLink
-                to="/contact"
+                to="/support"
                 className={({ isActive }) =>
                   `text-sm font-medium hover:underline focus-visible:underline ${
                     isActive ? 'text-gray-900' : 'text-gray-600'
@@ -59,7 +59,7 @@ export default function App() {
                 }
                 aria-current={({ isActive }) => (isActive ? 'page' : undefined)}
               >
-                Contact
+                Support
               </NavLink>
             </nav>
           </div>
@@ -73,7 +73,7 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/fleet" element={<Fleet />} />
-                <Route path="/contact" element={<Contact />} />
+                <Route path="/support" element={<Support />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>

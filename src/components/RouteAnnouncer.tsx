@@ -9,7 +9,7 @@ export default function RouteAnnouncer() {
     () => ({
       '/': 'Home',
       '/fleet': 'Fleet',
-      '/contact': 'Contact',
+      '/support': 'Support',
     }),
     []
   );

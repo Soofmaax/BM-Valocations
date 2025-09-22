@@ -2,7 +2,7 @@
 
 ## Description
 - Cette PR améliore la robustesse du code en éliminant tout usage de `any` et en instaurant un typage strict dans une structure `src/` minimale.
-- Mise en place du routing (React Router) avec code-splitting (React.lazy + Suspense) et trois pages (Home, Fleet, Contact).
+- Mise en place du routing (React Router) avec code-splitting (React.lazy + Suspense) et trois pages (Home, Fleet, Support).
 - Améliorations accessibilité avec `eslint-plugin-jsx-a11y` et structure sémantique (header/nav/main, aria-*).
 - PWA: ajout de `vite-plugin-pwa` avec manifest généré, mode `autoUpdate`, stratégies Workbox de base.
 - SEO: balises Open Graph/Twitter de base dans `index.html` et gestion des titres/descriptions par page avec `react-helmet-async`.
@@ -22,7 +22,7 @@
     - `src/components/ui/Card.tsx` (Card, CardHeader, CardTitle, CardContent)
     - `src/components/ui/Badge.tsx` (Badge + CategoryBadge)
     - `src/components/ui/cn.ts` (utilitaire classes)
-  - `src/pages/Home.tsx`, `src/pages/Fleet.tsx`, `src/pages/Contact.tsx`: pages typées avec balises `<Helmet>` (SEO), refactorisées pour utiliser Button/Card/Badge (Contact: suppression du formulaire, informations de contact uniquement)
+  - `src/pages/Home.tsx`, `src/pages/Fleet.tsx`, `src/pages/Support.tsx`: pages typées avec balises `<Helmet>` (SEO), refactorisées pour utiliser Button/Card/Badge (Support: informations de contact uniquement, pas de formulaire)
   - `src/pages/NotFound.tsx`: page 404 accessible avec `noindex`
   - `src/data/vehicles.ts`: données typées partagées
   - `src/types/index.ts`: définitions de types partagés (Vehicle, VehicleCategory)
@@ -42,10 +42,14 @@
   - `tailwind.config.js`: ajout du champ `content` pour inclure `./index.html` et `./src/**/*.{ts,tsx}`, et ajout de tokens (colors, borderRadius, boxShadow)
   - `vite.config.ts`: ajout `vite-plugin-pwa` (manifest/workbox) + configuration des tests (Vitest: jsdom, setupFiles, globals)
   - `index.html`: métadonnées SEO (OG/Twitter), `theme-color`
+  - `public/sitemap.xml`: remplacement de `/contact` par `/support`
+  - `src/App.tsx`: mise à jour de la nav et des routes vers `/support`
   - `package.json`:
     - scripts: `typecheck`, `test`, `test:run`, `format`, `format:fix`, `prepare`
     - `lint-staged` config
     - deps/devDeps: `react-helmet-async`, `vite-plugin-pwa`, `prettier`, `eslint-config-prettier`, `husky`, `lint-staged`, `vitest`, `@testing-library/react`, `@testing-library/jest-dom`, `jsdom`, `eslint-plugin-jsx-a11y`
+- Suppression:
+  - `src/pages/Contact.tsx` (remplacé par `src/pages/Support.tsx`)
 
 ## Checklist
 - [x] Aucune occurrence de `any` ou `as any`

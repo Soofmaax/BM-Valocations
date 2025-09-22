@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 import App from './App';
 import './index.css';
+import { initSentry } from './lib/sentry';
+
+initSentry();
 
 const root = document.getElementById('root');
 

@@ -1,5 +1,6 @@
 import { Suspense, lazy } from 'react';
 import { BrowserRouter, Link, NavLink, Route, Routes } from 'react-router-dom';
+import AppErrorBoundary from './components/ErrorBoundary';
 
 const Home = lazy(() => import('./pages/Home'));
 const Fleet = lazy(() => import('./pages/Fleet'));
@@ -61,14 +62,16 @@ export default function App() {
         </header>
 
         <main className="p-6 space-y-6 animate-fade-in">
-          <Suspense fallback={<p className="text-sm text-gray-600">Loading…</p>}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/fleet" element={<Fleet />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
+          <AppErrorBoundary>
+            <Suspense fallback={<p className="text-sm text-gray-600">Loading…</p>}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/fleet" element={<Fleet />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </AppErrorBoundary>
         </main>
       </div>
     </BrowserRouter>

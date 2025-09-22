@@ -1,6 +1,9 @@
 import { Suspense, lazy } from 'react';
 import { BrowserRouter, Link, NavLink, Route, Routes } from 'react-router-dom';
 import AppErrorBoundary from './components/ErrorBoundary';
+import SkipLink from './components/SkipLink';
+import RouteAnnouncer from './components/RouteAnnouncer';
+import RouteFocusHandler from './components/RouteFocusHandler';
 
 const Home = lazy(() => import('./pages/Home'));
 const Fleet = lazy(() => import('./pages/Fleet'));
@@ -11,6 +14,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-gray-50 text-gray-900">
+        <SkipLink />
         <header className="p-6 border-b bg-white">
           <div className="flex items-baseline justify-between">
             <div>
@@ -61,7 +65,9 @@ export default function App() {
           </div>
         </header>
 
-        <main className="p-6 space-y-6 animate-fade-in">
+        <main id="main-content" role="main" tabIndex={-1} className="p-6 space-y-6 animate-fade-in">
+          <RouteAnnouncer />
+          <RouteFocusHandler />
           <AppErrorBoundary>
             <Suspense fallback={<p className="text-sm text-gray-600">Loading…</p>}>
               <Routes>

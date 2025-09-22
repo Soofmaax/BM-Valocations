@@ -71,6 +71,11 @@
 - [x] CI (install, type-check, lint, tests, build) ajoutée
 - [x] Prettier + Husky + lint-staged en place
 
+## TODOs (to complete when the agency is ready)
+- Replace placeholder support emails in SUPPORT.md (support@your-agency.tld, security@your-agency.tld, contact@your-agency.tld).
+- Replace placeholder security email in SECURITY.md (security@bm-valocations.com) with your agency address.
+- Optionally update README “Support” section with your website/contact links.
+
 ## Tests
 - `npm run typecheck` doit passer
 - `npm run lint` doit passer sans avertissements bloquants sur `any`

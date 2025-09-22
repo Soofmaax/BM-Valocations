@@ -113,6 +113,8 @@ See SECURITY.md for how to report vulnerabilities privately.
 
 See SUPPORT.md for support channels, hours and response targets. The contact emails are placeholders until the agency is available.
 
+> TODO: Replace placeholder emails (support@your-agency.tld, security@your-agency.tld, contact@your-agency.tld) with your real agency contacts when ready.
+
 ## License
 
 MIT — see LICENSE.

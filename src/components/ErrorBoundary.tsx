@@ -38,7 +38,6 @@ class RawErrorBoundary extends React.Component<Props, State> {
 
   componentDidCatch(error: unknown, errorInfo: unknown) {
     // Keep minimal: log to console for now; can integrate a reporter later.
-    // eslint-disable-next-line no-console
     console.error('App error boundary caught an error:', error, errorInfo);
   }
 

@@ -41,7 +41,7 @@ function toDataUrlPng(buf) {
 function baseCanvas(children, logoDataUrl) {
   const logoNode =
     logoDataUrl &&
-    ({
+    {
       type: 'img',
       props: {
         src: logoDataUrl,
@@ -54,7 +54,7 @@ function baseCanvas(children, logoDataUrl) {
           borderRadius: 12,
         },
       },
-    } as const);
+    };
 
   return {
     type: 'div',

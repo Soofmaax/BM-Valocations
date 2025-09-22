@@ -60,12 +60,10 @@ async function main() {
   }
 
   await browser.close();
-  // eslint-disable-next-line no-console
   console.log(`Screenshots saved to ${OUT_DIR}`);
 }
 
 main().catch((err) => {
-  // eslint-disable-next-line no-console
   console.error('Screenshot capture failed:', err);
   process.exit(1);
 });

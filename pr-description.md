@@ -12,7 +12,9 @@
   - `src/App.tsx`: composant d’exemple entièrement typé
   - `src/types/index.ts`: définitions de types partagés (Vehicle, VehicleCategory)
   - `src/index.css`: base Tailwind et font
-  - `.github/workflows/ci.yml`: workflow CI install + type-check + lint + build
+  - `.github/workflows/ci.yml`: workflow CI install + type-check + lint + build, avec:
+    - matrice de versions Node (`18`, `20`)
+    - cache npm (actions/setup-node avec `cache: 'npm'`)
 - Modification:
   - `eslint.config.js`: ajout de la règle `@typescript-eslint/no-explicit-any: "error"`
   - `tailwind.config.js`: ajout du champ `content` pour inclure `./index.html` et `./src/**/*.{ts,tsx}` afin d’éviter la purge des classes utilisées

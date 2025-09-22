@@ -197,6 +197,12 @@ MIT — see LICENSE.
 
 Place your final logo at public/brand/logo.svg and run npm run build. The prebuild script will generate favicons, Apple Touch Icon and OG images automatically. See docs/BRAND_ASSETS.md.
 
+## Credits / Attribution
+
+Built by <a href="https://your-agency.tld" target="_blank" rel="noopener noreferrer">Your Agency</a>.
+
+> TODO: Replace “Your Agency” and the URL with your actual agency name and website once available.
+
 ## Acknowledgments
 
 - Vite, React, TypeScript, Tailwind CSS

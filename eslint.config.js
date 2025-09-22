@@ -17,8 +17,8 @@ export default tseslint.config(
     },
     plugins: {
       'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
-      'jsx-a11y': jsxA11y,
+      'react-refresh': reactRefresh
+      // Do not re-register 'jsx-a11y' plugin here since it's already included via flatConfigs.recommended
     },
     rules: {
       ...reactHooks.configs.recommended.rules,

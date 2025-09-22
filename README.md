@@ -109,6 +109,10 @@ See CONTRIBUTING.md and CODE_OF_CONDUCT.md.
 
 See SECURITY.md for how to report vulnerabilities privately.
 
+## Support
+
+See SUPPORT.md for support channels, hours and response targets. The contact emails are placeholders until the agency is available.
+
 ## License
 
 MIT — see LICENSE.

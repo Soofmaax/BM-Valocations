@@ -1,12 +1,17 @@
 # Support policy
 
+> TODO: Replace placeholder emails with your agency contacts when created.
+
 This project is maintained for a client and also serves as portfolio material. A lightweight support process is provided below. Contact details use placeholders until the agency is available.
 
 ## Channels
 
 - Email (preferred): support@your-agency.tld (placeholder)
+  - TODO: Update to your agency address.
 - Security issues: security@your-agency.tld (placeholder) — or see SECURITY.md
+  - TODO: Update to your agency address and align with SECURITY.md.
 - General inquiries: contact@your-agency.tld (placeholder)
+  - TODO: Update to your agency address.
 
 Replace these addresses with your real agency contacts when available.
 

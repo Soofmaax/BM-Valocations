@@ -1,5 +1,7 @@
 # Security Policy
 
+> TODO: Replace placeholder email with your agency security contact once available.
+
 ## Supported versions
 
 This is an actively developed project. Security fixes will be applied to `main`.
@@ -8,6 +10,7 @@ This is an actively developed project. Security fixes will be applied to `main`.
 
 - Please do not open public issues for security problems.
 - Report privately via email: security@bm-valocations.com (placeholder)
+  - TODO: Update this address to your agency domain (e.g., security@your-agency.tld).
   - Include steps to reproduce, affected files/versions, and potential impact.
   - We aim to acknowledge within 5 business days.
 

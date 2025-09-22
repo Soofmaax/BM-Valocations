@@ -22,7 +22,7 @@
     - `src/components/ui/Card.tsx` (Card, CardHeader, CardTitle, CardContent)
     - `src/components/ui/Badge.tsx` (Badge + CategoryBadge)
     - `src/components/ui/cn.ts` (utilitaire classes)
-  - `src/pages/Home.tsx`, `src/pages/Fleet.tsx`, `src/pages/Contact.tsx`: pages typées avec balises `<Helmet>` (SEO), refactorisées pour utiliser Button/Card/Badge
+  - `src/pages/Home.tsx`, `src/pages/Fleet.tsx`, `src/pages/Contact.tsx`: pages typées avec balises `<Helmet>` (SEO), refactorisées pour utiliser Button/Card/Badge (Contact: suppression du formulaire, informations de contact uniquement)
   - `src/pages/NotFound.tsx`: page 404 accessible avec `noindex`
   - `src/data/vehicles.ts`: données typées partagées
   - `src/types/index.ts`: définitions de types partagés (Vehicle, VehicleCategory)

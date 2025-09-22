@@ -28,24 +28,9 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Build
-        run: npm run build
-
-      - name: Start preview server
-        run: |
-          nohup npm run preview:ci >/dev/null 2>&1 &
-          for i in {1..30}; do
-            if curl -sSf http://127.0.0.1:4173 >/dev/null; then
-              echo "Preview server is up."
-              break
-            fi
-            echo "Waiting for preview server..."
-            sleep 2
-          done
-
-      - name: Capture screenshots (desktop + tablet + mobile)
+      - name: Capture screenshots from production (desktop + tablet + mobile)
         env:
-          BASE_URL: http://127.0.0.1:4173
+          BASE_URL: https://bm-valocations.com
           SCREENSHOTS_DESKTOP: '1'
           SCREENSHOTS_TABLET: '1'
           SCREENSHOTS_MOBILE: '1'

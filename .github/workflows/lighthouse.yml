@@ -13,37 +13,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Start preview server
-        run: |
-          nohup npm run preview:ci >/dev/null 2>&1 &
-          for i in {1..30}; do
-            if curl -sSf http://127.0.0.1:4173 >/dev/null; then
-              echo "Preview server is up."
-              break
-            fi
-            echo "Waiting for preview server..."
-            sleep 2
-          done
-
-      - name: Run Lighthouse CI
+      - name: Run Lighthouse CI against production domain
         uses: treosh/lighthouse-ci-action@v11
         with:
           urls: |
-            http://127.0.0.1:4173/
-            http://127.0.0.1:4173/fleet
-            http://127.0.0.1:4173/support
+            https://bm-valocations.com/
+            https://bm-valocations.com/fleet
+            https://bm-valocations.com/support
           uploadArtifacts: true
           temporaryPublicStorage: true
           configPath: ./lighthouserc.json

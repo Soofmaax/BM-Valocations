@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bm-va.example.com/sitemap.xml

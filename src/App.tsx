@@ -4,6 +4,7 @@ import { BrowserRouter, Link, NavLink, Route, Routes } from 'react-router-dom';
 const Home = lazy(() => import('./pages/Home'));
 const Fleet = lazy(() => import('./pages/Fleet'));
 const Contact = lazy(() => import('./pages/Contact'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
   return (
@@ -65,6 +66,7 @@ export default function App() {
               <Route path="/" element={<Home />} />
               <Route path="/fleet" element={<Fleet />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
         </main>

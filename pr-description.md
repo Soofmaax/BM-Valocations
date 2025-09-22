@@ -6,19 +6,23 @@
 - Améliorations accessibilité avec `eslint-plugin-jsx-a11y` et structure sémantique (header/nav/main, aria-*).
 - PWA: ajout de `vite-plugin-pwa` avec manifest généré, mode `autoUpdate`, stratégies Workbox de base.
 - SEO: balises Open Graph/Twitter de base dans `index.html` et gestion des titres/descriptions par page avec `react-helmet-async`.
+- 404: page NotFound accessible avec meta `noindex`, route wildcard `*` et lien de retour vers l’accueil.
+- Fichiers SEO robots/sitemap: `public/robots.txt` et `public/sitemap.xml` avec les routes principales.
 - Un workflow GitHub Actions (`.github/workflows/ci.yml`) a été ajouté pour automatiser les vérifications de qualité (type-check, linting, tests & build) sur chaque `push` et `pull_request` vers `main`.
 - ESLint est configuré pour interdire l’utilisation de `any` via la règle `@typescript-eslint/no-explicit-any: "error"`.
 
 ## Détails des changements
 - Ajout:
   - `src/main.tsx`: point d’entrée React strictement typé + `HelmetProvider`
-  - `src/App.tsx`: App avec Router, Nav accessible, lazy routes et Suspense
+  - `src/App.tsx`: App avec Router, Nav accessible, lazy routes et Suspense (+ route 404)
   - `src/pages/Home.tsx`, `src/pages/Fleet.tsx`, `src/pages/Contact.tsx`: pages typées avec balises `<Helmet>` (SEO)
+  - `src/pages/NotFound.tsx`: page 404 accessible avec `noindex`
   - `src/data/vehicles.ts`: données typées partagées
   - `src/types/index.ts`: définitions de types partagés (Vehicle, VehicleCategory)
   - `src/index.css`: base Tailwind et font
   - `src/test/setup.ts`: configuration Jest-DOM pour Vitest
   - `src/App.test.tsx`: test UI de base
+  - `public/robots.txt` et `public/sitemap.xml`: SEO technique
   - `.github/workflows/ci.yml`: workflow CI install + type-check + lint + tests + build, avec:
     - matrice de versions Node (`18`, `20`)
     - cache npm (actions/setup-node avec `cache: 'npm'`)
@@ -41,6 +45,7 @@
 - [x] Routing + code-splitting + a11y de base en place
 - [x] PWA configurée (manifest auto, service worker Workbox)
 - [x] SEO de base (OG/Twitter + titres/descriptions par page)
+- [x] 404 avec `noindex` + robots/sitemap ajoutés
 - [x] ESLint interdit explicitement `any`
 - [x] CI (install, type-check, lint, tests, build) ajoutée
 - [x] Prettier + Husky + lint-staged en place

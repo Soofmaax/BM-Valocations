@@ -1,15 +1,71 @@
-# BM-VA Locations — Frontend (Vite + React + TypeScript)
+<p align="center">
+  <img src="/og-home.png" alt="BM-VA Locations — Premium Car Rental (Open Graph image)" width="640" />
+</p>
+
+<h1 align="center">BM-VA Locations — Frontend (Vite + React + TypeScript)</h1>
+
+<p align="center">
+  <a href="LICENSE">
+    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-green.svg" />
+  </a>
+  <a href="https://nodejs.org/en" target="_blank">
+    <img alt="Node >=18" src="https://img.shields.io/badge/node-%3E%3D18.0-339933?logo=node.js&logoColor=white" />
+  </a>
+  <img alt="Vite" src="https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white" />
+  <img alt="React" src="https://img.shields.io/badge/React-149ECA?logo=react&logoColor=white" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white" />
+  <img alt="Tailwind" src="https://img.shields.io/badge/Tailwind-06B6D4?logo=tailwindcss&logoColor=white" />
+  <img alt="Vitest" src="https://img.shields.io/badge/Vitest-6E9F18?logo=vitest&logoColor=white" />
+  <img alt="ESLint" src="https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white" />
+  <img alt="Prettier" src="https://img.shields.io/badge/Prettier-F7B93E?logo=prettier&logoColor=black" />
+</p>
+
+<p align="center">
+  <!-- TODO: Replace with real owner/repo once hosted on GitHub -->
+  <a href="#ci-status">
+    <img alt="CI" src="https://img.shields.io/badge/CI-GitHub_Actions-inactive?logo=githubactions&logoColor=white" />
+  </a>
+</p>
 
 A modern, accessible, and production-ready frontend for a premium car rental service. Built with Vite, React, TypeScript and Tailwind CSS, featuring strict linting, tests, PWA support, SEO/social meta tags, CI, and a small design system.
 
 - Live domain: https://bm-valocations.com/
-- Tech stack: Vite, React, TypeScript, Tailwind CSS, Vitest, React Testing Library
-- Quality: ESLint (flat config), Prettier, Husky + lint-staged, TypeScript strict, GitHub Actions CI
 - UX: Accessible routing, skip link, route announcer, focus handling, 404 custom page
+- SEO: Canonical, Open Graph/Twitter, per-page Helmet overrides, social images
 - PWA: Manifest + service worker (vite-plugin-pwa)
-- SEO: Canonical, Open Graph/Twitter, per-page Helmet overrides
-- Social: Auto-generated OG images per page at build time
-- Branding: Auto-generated favicons and Apple Touch Icon from a single source logo
+- Quality: ESLint (flat config), Prettier, Husky + lint-staged, TypeScript strict, GitHub Actions CI
+- Social/Branding: Auto-generated OG images per page + favicons/Apple Icon from a single source logo
+
+---
+
+## Table of contents
+
+- Features
+- Quick start
+- Scripts
+- Project structure
+- Environment
+- Quality gates
+- Accessibility
+- SEO and PWA
+- CI/CD
+- Support
+- Security
+- License
+- Brand assets (single source)
+- Acknowledgments
+
+## Features
+
+- Type-safe React app (TS strict) with a small Design System (Button, Card, Badge)
+- Routing with code-splitting (Home, Fleet, Support, NotFound)
+- A11y essentials: skip-link, route announcer (aria-live), focus management
+- SEO-ready: canonical, per-page Helmet meta, OG/Twitter cards
+- PWA-enabled build with auto-update registration
+- Tests with Vitest + React Testing Library (UI + a11y)
+- GitHub Actions CI (Node 18/20 matrix, cache, typecheck, lint, tests, build)
+- Pre-commit quality guard: Husky + lint-staged (ESLint + Prettier)
+- Social images and favicons auto-generated at build from a single logo.svg
 
 ## Quick start
 
@@ -64,6 +120,15 @@ See docs/PROJECT_STRUCTURE.md for more details.
 
 This is a client-side app (Vite). Exposed env vars must be prefixed with VITE_ (e.g., VITE_SENTRY_DSN if you re-enable Sentry later). Do not put server secrets here.
 
+## Quality gates
+
+- Type checks must pass: npm run typecheck
+- Lint must pass: npm run lint (no explicit any)
+- Tests must pass: npm run test:run
+- Build must succeed: npm run build
+
+These steps run in CI for all pushes/PRs to main.
+
 ## Accessibility
 
 Included:
@@ -75,20 +140,13 @@ Included:
 
 See docs/ACCESSIBILITY.md.
 
-## SEO and social share
+## SEO and PWA
 
 - Canonical link, theme-color
 - Open Graph/Twitter meta (global + per-page overrides via Helmet)
 - OG images generated at build time: og-home.png, og-fleet.png, og-support.png, og-image.png (fallback)
+- PWA via vite-plugin-pwa (manifest + service worker auto-update)
 - robots.txt + sitemap.xml
-
-See docs/SEO_PWA.md.
-
-## PWA
-
-Configured with vite-plugin-pwa:
-- Manifest and service worker generated on build
-- Auto-update registration strategy
 
 See docs/SEO_PWA.md.
 
@@ -99,21 +157,18 @@ GitHub Actions:
 - Caching
 - Steps: install, typecheck, lint, test, build
 
+<!-- TODO: Replace badge at top with real workflow badge once the repository is on GitHub (owner/repo). -->
 See docs/CI_CD.md.
-
-## Contributing
-
-See CONTRIBUTING.md and CODE_OF_CONDUCT.md.
-
-## Security
-
-See SECURITY.md for how to report vulnerabilities privately.
 
 ## Support
 
 See SUPPORT.md for support channels, hours and response targets. The contact emails are placeholders until the agency is available.
 
 > TODO: Replace placeholder emails (support@your-agency.tld, security@your-agency.tld, contact@your-agency.tld) with your real agency contacts when ready.
+
+## Security
+
+See SECURITY.md for how to report vulnerabilities privately.
 
 ## License
 
@@ -122,3 +177,10 @@ MIT — see LICENSE.
 ## Brand assets (single source)
 
 Place your final logo at public/brand/logo.svg and run npm run build. The prebuild script will generate favicons, Apple Touch Icon and OG images automatically. See docs/BRAND_ASSETS.md.
+
+## Acknowledgments
+
+- Vite, React, TypeScript, Tailwind CSS
+- Vitest + React Testing Library
+- vite-plugin-pwa
+- Satori + Resvg for dynamic OG/brand image generation

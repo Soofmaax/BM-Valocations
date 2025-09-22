@@ -160,6 +160,25 @@ GitHub Actions:
 <!-- TODO: Replace badge at top with real workflow badge once the repository is on GitHub (owner/repo). -->
 See docs/CI_CD.md.
 
+## Deployment
+
+- Production: https://bm-valocations.com/
+- Guide: see docs/DEPLOYMENT.md (Vercel/Netlify examples, env vars, headers, checklist)
+- Status badge:
+  <!-- TODO: Replace with real deployment badge (e.g., Vercel/Netlify) when available -->
+  <img alt="Deployment" src="https://img.shields.io/badge/Deployment-pending-lightgrey">
+
+## Screenshots
+
+Add screenshots to showcase UX for your portfolio.
+
+- Suggested locations:
+  - `docs/screenshots/home.png`
+  - `docs/screenshots/fleet.png`
+  - `docs/screenshots/support.png`
+
+> TODO: Add final screenshots and optionally link them here with captions.
+
 ## Support
 
 See SUPPORT.md for support channels, hours and response targets. The contact emails are placeholders until the agency is available.

@@ -43,9 +43,12 @@ jobs:
             sleep 2
           done
 
-      - name: Capture screenshots
+      - name: Capture screenshots (desktop + tablet + mobile)
         env:
           BASE_URL: http://127.0.0.1:4173
+          SCREENSHOTS_DESKTOP: '1'
+          SCREENSHOTS_TABLET: '1'
+          SCREENSHOTS_MOBILE: '1'
         run: npm run screenshots
 
       - name: Upload screenshots as artifact (PRs)

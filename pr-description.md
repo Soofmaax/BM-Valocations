@@ -15,6 +15,7 @@
   - `.github/workflows/ci.yml`: workflow CI install + lint + build
 - Modification:
   - `eslint.config.js`: ajout de la règle `@typescript-eslint/no-explicit-any: "error"`
+  - `tailwind.config.js`: ajout du champ `content` pour inclure `./index.html` et `./src/**/*.{ts,tsx}` afin d’éviter la purge des classes utilisées
 
 ## Checklist
 - [x] Aucune occurrence de `any` ou `as any`

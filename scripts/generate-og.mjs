@@ -117,6 +117,63 @@ async function generateBaseImage(fonts) {
   return renderToPng(svg);
 }
 
+async function generateHomeImage(fonts) {
+  const svg = await satori(
+    baseCanvas([
+      {
+        type: 'div',
+        props: {
+          style: { display: 'flex', flexDirection: 'column', maxWidth: '1000px' },
+          children: [
+            {
+              type: 'div',
+              props: {
+                style: {
+                  fontSize: 82,
+                  fontWeight: 800,
+                  letterSpacing: '-2px',
+                  lineHeight: 1.05,
+                  fontFamily: 'Sora',
+                },
+                children: 'BM-VA Locations',
+              },
+            },
+            {
+              type: 'div',
+              props: {
+                style: {
+                  marginTop: 16,
+                  fontSize: 38,
+                  color: '#f59e0b',
+                  fontWeight: 700,
+                  fontFamily: 'Sora',
+                },
+                children: 'Premium Car Rental',
+              },
+            },
+            {
+              type: 'div',
+              props: {
+                style: {
+                  marginTop: 12,
+                  fontSize: 24,
+                  color: '#d1d5db',
+                  fontWeight: 400,
+                  fontFamily: 'Sora',
+                },
+                children: 'Book your ride with confidence',
+              },
+            },
+          ],
+        },
+      },
+    ]),
+    { width, height, fonts }
+  );
+
+  return renderToPng(svg);
+}
+
 async function generateFleetImage(fonts) {
   const svg = await satori(
     baseCanvas([
@@ -242,22 +299,30 @@ async function main() {
     { name: 'Sora', data: soraBold, weight: 800, style: 'normal' },
   ];
 
-  const [basePng, fleetPng, supportPng] = await Promise.all([
+  const [basePng, homePng, fleetPng, supportPng] = await Promise.all([
     generateBaseImage(fonts),
+    generateHomeImage(fonts),
     generateFleetImage(fonts),
     generateSupportImage(fonts),
   ]);
 
   await mkdir(path.resolve('public'), { recursive: true });
   const baseOut = path.resolve('public/og-image.png');
+  const homeOut = path.resolve('public/og-home.png');
   const fleetOut = path.resolve('public/og-fleet.png');
   const supportOut = path.resolve('public/og-support.png');
 
-  await Promise.all([writeFile(baseOut, basePng), writeFile(fleetOut, fleetPng), writeFile(supportOut, supportPng)]);
+  await Promise.all([
+    writeFile(baseOut, basePng),
+    writeFile(homeOut, homePng),
+    writeFile(fleetOut, fleetPng),
+    writeFile(supportOut, supportPng),
+  ]);
 
   // eslint-disable-next-line no-console
   console.log(`OG images generated at:
   - ${baseOut}
+  - ${homeOut}
   - ${fleetOut}
   - ${supportOut}
 (${width}x${height})`);

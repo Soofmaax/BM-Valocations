@@ -1,3 +1,8 @@
+// TODO: Remove this ConstructionNotice component before the final production launch.
+// It is intended for the construction phase only. When the site is finalized:
+// 1) Delete the import and usage in src/App.tsx (<ConstructionNotice />).
+// 2) Remove this file or keep it commented out for historical reference.
+
 import { useEffect, useState } from 'react';
 import Button from './ui/Button';
 
@@ -36,7 +41,7 @@ export default function ConstructionNotice() {
           <h2 id="construction-title" className="text-lg font-semibold">
             Site en construction
           </h2>
-          <p id="construction-desc" className="mt-2 text-sm text-gray-600">
+        <p id="construction-desc" className="mt-2 text-sm text-gray-600">
             Ce site est en cours de finalisation. Certaines pages, contenus ou visuels peuvent
             évoluer. Merci de votre compréhension.
           </p>

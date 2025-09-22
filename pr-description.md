@@ -24,6 +24,7 @@
   - `src/index.css`: base Tailwind et font
   - `src/test/setup.ts`: configuration Jest-DOM pour Vitest
   - `src/App.test.tsx`: test UI de base
+  - `src/components/ErrorBoundary.test.tsx`: test du fallback ErrorBoundary et du bouton Reload
   - `public/robots.txt` et `public/sitemap.xml`: SEO technique
   - `.github/workflows/ci.yml`: workflow CI install + type-check + lint + tests + build, avec:
     - matrice de versions Node (`18`, `20`)

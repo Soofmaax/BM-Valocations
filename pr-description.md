@@ -26,6 +26,7 @@
     - `src/components/ui/cn.ts` (utilitaire classes)
   - `src/pages/Home.tsx`, `src/pages/Fleet.tsx`, `src/pages/Support.tsx`: pages typées avec balises `<Helmet>` (SEO), refactorisées pour utiliser Button/Card/Badge (Support: informations de contact uniquement, pas de formulaire)
   - `src/pages/NotFound.tsx`: page 404 custom (grand titre, message amical, CTA “Retourner à l’accueil”) + petite illustration SVG animée
+  - `scripts/generate-og.mjs`: script Node pour générer `public/og-image.png` (Satori + Resvg), exécuté automatiquement en `prebuild`
   - `src/data/vehicles.ts`: données typées partagées
   - `src/types/index.ts`: définitions de types partagés (Vehicle, VehicleCategory)
   - `src/index.css`: base Tailwind et font
@@ -43,13 +44,14 @@
   - `eslint.config.js`: ajout de la règle `@typescript-eslint/no-explicit-any: "error"`, intégration `eslint-config-prettier` et `eslint-plugin-jsx-a11y` (flat config recommandé)
   - `tailwind.config.js`: ajout du champ `content` pour inclure `./index.html` et `./src/**/*.{ts,tsx}`, et ajout de tokens (colors, borderRadius, boxShadow)
   - `vite.config.ts`: ajout `vite-plugin-pwa` (manifest/workbox) + configuration des tests (Vitest: jsdom, setupFiles, globals)
-  - `index.html`: métadonnées SEO (OG/Twitter) mises en placeholders (URL_DU_SITE_PLACEHOLDER, TITRE_DU_SITE_PLACEHOLDER, DESCRIPTION_COURTE_DU_SITE_PLACEHOLDER, URL_VERS_UNE_IMAGE_REPRESENTATIVE_PLACEHOLDER) + `theme-color`
+  - `index.html`: métadonnées SEO (OG/Twitter) mises à jour pour `https://bm-valocations.com/` avec l’OG image locale `https://bm-valocations.com/og-image.png` et dimensions (1200x630)
   - `public/sitemap.xml`: remplacement de `/contact` par `/support`
   - `src/App.tsx`: ajout du Footer et mise à jour de la nav/routes vers `/support`
   - `package.json`:
-    - scripts: `typecheck`, `test`, `test:run`, `format`, `format:fix`, `prepare`
+    - scripts: ajout de `prebuild` (génération OG image)
+    - deps/devDeps: ajout de `satori` et `@resvg/resvg-js`
+    - scripts existants: `typecheck`, `test`, `test:run`, `format`, `format:fix`, `prepare`
     - `lint-staged` config
-    - deps/devDeps: `react-helmet-async`, `vite-plugin-pwa`, `prettier`, `eslint-config-prettier`, `husky`, `lint-staged`, `vitest`, `@testing-library/react`, `@testing-library/jest-dom`, `jsdom`, `eslint-plugin-jsx-a11y`
 - Suppression:
   - `src/pages/Contact.tsx` (remplacé par `src/pages/Support.tsx`)
 

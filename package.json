@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node ./scripts/generate-og.mjs",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
+    "@resvg/resvg-js": "^2.6.2",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
     "@types/react": "^18.3.5",
@@ -52,6 +54,7 @@
     "lint-staged": "^15.2.10",
     "postcss": "^8.4.35",
     "prettier": "^3.3.3",
+    "satori": "^0.10.8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.3.0",

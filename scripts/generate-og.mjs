@@ -5,7 +5,6 @@ import { Resvg } from '@resvg/resvg-js';
 
 const width = 1200;
 const height = 630;
-const outPath = path.resolve('public/og-image.png');
 
 async function fetchFont(url) {
   const res = await fetch(url);
@@ -16,13 +15,15 @@ async function fetchFont(url) {
   return Buffer.from(ab);
 }
 
-async function main() {
-  // Sora fonts from google/fonts repository
-  const [soraRegular, soraBold] = await Promise.all([
-    fetchFont('https://github.com/google/fonts/raw/main/ofl/sora/Sora-Regular.ttf'),
-    fetchFont('https://github.com/google/fonts/raw/main/ofl/sora/Sora-Bold.ttf'),
-  ]);
+async function renderToPng(svg) {
+  const resvg = new Resvg(svg, {
+    fitTo: { mode: 'width', value: width },
+    background: '#111827',
+  });
+  return resvg.render().asPng();
+}
 
+async function generateBaseImage(fonts) {
   const svg = await satori(
     {
       type: 'div',
@@ -32,7 +33,7 @@ async function main() {
           height: '100%',
           display: 'flex',
           position: 'relative',
-          background: '#111827', // primary
+          background: '#111827',
           color: '#ffffff',
           padding: '64px',
           alignItems: 'center',
@@ -66,7 +67,7 @@ async function main() {
                     style: {
                       marginTop: 16,
                       fontSize: 40,
-                      color: '#f59e0b', // accent
+                      color: '#f59e0b',
                       fontWeight: 700,
                       fontFamily: 'Sora',
                     },
@@ -89,7 +90,6 @@ async function main() {
               ],
             },
           },
-          // Accents
           {
             type: 'div',
             props: {
@@ -109,31 +109,135 @@ async function main() {
         ],
       },
     },
-    {
-      width,
-      height,
-      fonts: [
-        { name: 'Sora', data: soraRegular, weight: 400, style: 'normal' },
-        { name: 'Sora', data: soraBold, weight: 800, style: 'normal' },
-      ],
-    }
+    { width, height, fonts }
   );
 
-  const resvg = new Resvg(svg, {
-    fitTo: { mode: 'width', value: width },
-    background: '#111827',
-  });
-  const pngData = resvg.render().asPng();
+  return renderToPng(svg);
+}
 
-  await mkdir(path.dirname(outPath), { recursive: true });
-  await writeFile(outPath, pngData);
+async function generateFleetImage(fonts) {
+  const svg = await satori(
+    {
+      type: 'div',
+      props: {
+        style: {
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          position: 'relative',
+          background: '#111827',
+          color: '#ffffff',
+          padding: '64px',
+          alignItems: 'center',
+        },
+        children: [
+          {
+            type: 'div',
+            props: {
+              style: {
+                display: 'flex',
+                flexDirection: 'column',
+                maxWidth: '1000px',
+              },
+              children: [
+                {
+                  type: 'div',
+                  props: {
+                    style: {
+                      fontSize: 78,
+                      fontWeight: 800,
+                      letterSpacing: '-2px',
+                      lineHeight: 1.05,
+                      fontFamily: 'Sora',
+                    },
+                    children: 'Our Fleet',
+                  },
+                },
+                {
+                  type: 'div',
+                  props: {
+                    style: {
+                      marginTop: 16,
+                      fontSize: 40,
+                      color: '#f59e0b',
+                      fontWeight: 700,
+                      fontFamily: 'Sora',
+                    },
+                    children: 'BM-VA Locations',
+                  },
+                },
+                {
+                  type: 'div',
+                  props: {
+                    style: {
+                      marginTop: 12,
+                      fontSize: 24,
+                      color: '#d1d5db',
+                      fontWeight: 400,
+                      fontFamily: 'Sora',
+                    },
+                    children: 'Economy • Premium • SUV • Van',
+                  },
+                },
+              ],
+            },
+          },
+          {
+            type: 'div',
+            props: {
+              style: {
+                position: 'absolute',
+                right: '48px',
+                bottom: '48px',
+                width: '220px',
+                height: '220px',
+                borderRadius: '9999px',
+                background:
+                  'radial-gradient(circle at 30% 30%, rgba(245,158,11,0.5), rgba(245,158,11,0.15) 60%, transparent 70%)',
+                filter: 'blur(2px)',
+              },
+            },
+          },
+        ],
+      },
+    },
+    { width, height, fonts }
+  );
+
+  return renderToPng(svg);
+}
+
+async function main() {
+  const [soraRegular, soraBold] = await Promise.all([
+    fetchFont('https://github.com/google/fonts/raw/main/ofl/sora/Sora-Regular.ttf'),
+    fetchFont('https://github.com/google/fonts/raw/main/ofl/sora/Sora-Bold.ttf'),
+  ]);
+
+  const fonts = [
+    { name: 'Sora', data: soraRegular, weight: 400, style: 'normal' },
+    { name: 'Sora', data: soraBold, weight: 800, style: 'normal' },
+  ];
+
+  const [basePng, fleetPng] = await Promise.all([
+    generateBaseImage(fonts),
+    generateFleetImage(fonts),
+  ]);
+
+  await mkdir(path.resolve('public'), { recursive: true });
+  const baseOut = path.resolve('public/og-image.png');
+  const fleetOut = path.resolve('public/og-fleet.png');
+
+  await Promise.all([
+    writeFile(baseOut, basePng),
+    writeFile(fleetOut, fleetPng),
+  ]);
 
   // eslint-disable-next-line no-console
-  console.log(`OG image generated at ${outPath} (${width}x${height})`);
+  console.log(`OG images generated at ${baseOut} and ${fleetOut} (${width}x${height})`);
 }
 
 main().catch((err) => {
   // eslint-disable-next-line no-console
-  console.error('Failed to generate OG image:', err);
+  console.error('Failed to generate OG image(s):', err);
   process.exit(1);
 });

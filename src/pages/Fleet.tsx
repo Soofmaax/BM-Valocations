@@ -4,14 +4,30 @@ import { Card, CardContent, CardTitle } from '../components/ui/Card';
 import { CategoryBadge } from '../components/ui/Badge';
 
 export default function Fleet() {
+  const description =
+    'Browse our fleet of economy, premium, SUV and van vehicles available for rent.';
+
   return (
     <section aria-labelledby="fleet-heading" className="space-y-4">
       <Helmet>
         <title>Fleet — BM-VA</title>
-        <meta
-          name="description"
-          content="Browse our fleet of economy, premium, SUV and van vehicles available for rent."
-        />
+        <meta name="description" content={description} />
+
+        {/* Social sharing overrides for Fleet page */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://bm-valocations.com/fleet" />
+        <meta property="og:title" content="Our Fleet — BM-VA Locations" />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content="https://bm-valocations.com/og-fleet.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:type" content="image/png" />
+
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://bm-valocations.com/fleet" />
+        <meta property="twitter:title" content="Our Fleet — BM-VA Locations" />
+        <meta property="twitter:description" content={description} />
+        <meta property="twitter:image" content="https://bm-valocations.com/og-fleet.png" />
       </Helmet>
 
       <h2 id="fleet-heading" className="text-xl font-semibold">

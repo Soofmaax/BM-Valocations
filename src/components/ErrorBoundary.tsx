@@ -1,10 +1,9 @@
-import * as Sentry from '@sentry/react';
-import { useCallback } from 'react';
+import React from 'react';
 
 function ErrorFallback() {
-  const reload = useCallback(() => {
+  const reload = () => {
     window.location.reload();
-  }, []);
+  };
 
   return (
     <section aria-labelledby="error-heading" className="space-y-4 py-12 text-center">
@@ -27,6 +26,30 @@ function ErrorFallback() {
   );
 }
 
-export default function AppErrorBoundary({ children }: { children: React.ReactNode }) {
-  return <Sentry.ErrorBoundary fallback={<ErrorFallback />}>{children}</Sentry.ErrorBoundary>;
+type Props = { children: React.ReactNode };
+type State = { hasError: boolean };
+
+class RawErrorBoundary extends React.Component<Props, State> {
+  state: State = { hasError: false };
+
+  static getDerivedStateFromError(): State {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: unknown, errorInfo: unknown) {
+    // Keep minimal: log to console for now; can integrate a reporter later.
+    // eslint-disable-next-line no-console
+    console.error('App error boundary caught an error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <ErrorFallback />;
+    }
+    return this.props.children;
+  }
+}
+
+export default function AppErrorBoundary({ children }: Props) {
+  return <RawErrorBoundary>{children}</RawErrorBoundary>;
 }

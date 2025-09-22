@@ -26,7 +26,6 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",
-    "@sentry/react": "^7.120.0",
     "framer-motion": "^12.23.16",
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",

@@ -7,17 +7,16 @@
 - PWA: ajout de `vite-plugin-pwa` avec manifest généré, mode `autoUpdate`, stratégies Workbox de base.
 - SEO: balises Open Graph/Twitter de base dans `index.html` et gestion des titres/descriptions par page avec `react-helmet-async`.
 - 404: page NotFound accessible avec meta `noindex`, route wildcard `*` et lien de retour vers l’accueil.
-- Error handling: `ErrorBoundary` global avec fallback 500 et intégration Sentry optionnelle (activée si `VITE_SENTRY_DSN` est défini).
+- Error handling: `ErrorBoundary` global avec fallback 500 (sans Sentry).
 - Fichiers SEO robots/sitemap: `public/robots.txt` et `public/sitemap.xml` avec les routes principales.
 - Un workflow GitHub Actions (`.github/workflows/ci.yml`) a été ajouté pour automatiser les vérifications de qualité (type-check, linting, tests & build) sur chaque `push` et `pull_request` vers `main`.
 - ESLint est configuré pour interdire l’utilisation de `any` via la règle `@typescript-eslint/no-explicit-any: "error"`.
 
 ## Détails des changements
 - Ajout:
-  - `src/main.tsx`: point d’entrée React strictement typé + `HelmetProvider` + init Sentry conditionnel
+  - `src/main.tsx`: point d’entrée React strictement typé + `HelmetProvider`
   - `src/App.tsx`: App avec Router, Nav accessible, lazy routes et Suspense (+ route 404)
-  - `src/components/ErrorBoundary.tsx`: ErrorBoundary basé sur `@sentry/react` avec fallback UI
-  - `src/lib/sentry.ts`: initialisation Sentry (utilise `VITE_SENTRY_DSN` si présent)
+  - `src/components/ErrorBoundary.tsx`: ErrorBoundary React (sans Sentry) avec fallback UI
   - `src/pages/Home.tsx`, `src/pages/Fleet.tsx`, `src/pages/Contact.tsx`: pages typées avec balises `<Helmet>` (SEO)
   - `src/pages/NotFound.tsx`: page 404 accessible avec `noindex`
   - `src/data/vehicles.ts`: données typées partagées
@@ -40,7 +39,7 @@
   - `package.json`:
     - scripts: `typecheck`, `test`, `test:run`, `format`, `format:fix`, `prepare`
     - `lint-staged` config
-    - deps/devDeps: `@sentry/react`, `react-helmet-async`, `vite-plugin-pwa`, `prettier`, `eslint-config-prettier`, `husky`, `lint-staged`, `vitest`, `@testing-library/react`, `@testing-library/jest-dom`, `jsdom`, `eslint-plugin-jsx-a11y`
+    - deps/devDeps: `react-helmet-async`, `vite-plugin-pwa`, `prettier`, `eslint-config-prettier`, `husky`, `lint-staged`, `vitest`, `@testing-library/react`, `@testing-library/jest-dom`, `jsdom`, `eslint-plugin-jsx-a11y`
 
 ## Checklist
 - [x] Aucune occurrence de `any` ou `as any`
@@ -49,7 +48,7 @@
 - [x] PWA configurée (manifest auto, service worker Workbox)
 - [x] SEO de base (OG/Twitter + titres/descriptions par page)
 - [x] 404 avec `noindex` + robots/sitemap ajoutés
-- [x] Error boundary global + Sentry optionnel
+- [x] Error boundary global (sans Sentry)
 - [x] ESLint interdit explicitement `any`
 - [x] CI (install, type-check, lint, tests, build) ajoutée
 - [x] Prettier + Husky + lint-staged en place

@@ -176,8 +176,30 @@ Add screenshots to showcase UX for your portfolio.
   - `docs/screenshots/home.png`
   - `docs/screenshots/fleet.png`
   - `docs/screenshots/support.png`
+  - `docs/screenshots/404.png` (optional)
 
 > TODO: Add final screenshots and optionally link them here with captions.
+
+Direct links (placeholders):
+- Home: [docs/screenshots/home.png](docs/screenshots/home.png)
+- Fleet: [docs/screenshots/fleet.png](docs/screenshots/fleet.png)
+- Support: [docs/screenshots/support.png](docs/screenshots/support.png)
+- 404: [docs/screenshots/404.png](docs/screenshots/404.png)
+
+<!-- TODO: Uncomment the gallery once screenshots are added
+<p align="center">
+  <img src="docs/screenshots/home.png" alt="Home — landing page" width="800" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/fleet.png" alt="Fleet — vehicles listing" width="800" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/support.png" alt="Support — contact information" width="800" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/404.png" alt="Custom 404 page" width="800" />
+</p>
+-->
 
 ## Support
 

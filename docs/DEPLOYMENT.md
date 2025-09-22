@@ -70,3 +70,6 @@ This app is production-ready. Below are recommended deployment options and steps
 - [ ] PWA checked (manifest, service worker)
 - [ ] Accessibility spot-check (keyboard navigation, focus)
 - [ ] Performance spot-check (Lighthouse)
+- [ ] Remove construction popup before final launch:
+      - Delete `<ConstructionNotice />` from `src/App.tsx`
+      - Remove `src/components/ConstructionNotice.tsx`

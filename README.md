@@ -168,6 +168,14 @@ See docs/CI_CD.md.
   <!-- TODO: Replace with real deployment badge (e.g., Vercel/Netlify) when available -->
   <img alt="Deployment" src="https://img.shields.io/badge/Deployment-pending-lightgrey">
 
+Deployment checklist (final launch reminders):
+- Remove the construction popup:
+  - Delete `<ConstructionNotice />` from `src/App.tsx`
+  - Remove `src/components/ConstructionNotice.tsx`
+- Replace placeholder emails with your agency addresses (README, SUPPORT.md, SECURITY.md)
+- Replace README badges (CI/Deployment) with real links if not done yet
+- Provide final OG image(s) and favicon(s) if the brand logo is available
+
 ## Screenshots
 
 Add screenshots to showcase UX for your portfolio.

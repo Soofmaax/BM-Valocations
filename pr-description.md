@@ -6,8 +6,9 @@
 - Améliorations accessibilité avec `eslint-plugin-jsx-a11y` et structure sémantique (header/nav/main, aria-*).
 - PWA: ajout de `vite-plugin-pwa` avec manifest généré, mode `autoUpdate`, stratégies Workbox de base.
 - SEO: balises Open Graph/Twitter de base dans `index.html` et gestion des titres/descriptions par page avec `react-helmet-async`.
-- 404: page NotFound accessible avec meta `noindex`, route wildcard `*` et lien de retour vers l’accueil.
+- 404: page NotFound sur-mesure (titre/CTA), animation SVG subtile, meta `noindex`, route wildcard `*`.
 - Error handling: `ErrorBoundary` global avec fallback 500 (sans Sentry).
+- Footer: ajout d’icônes réseaux sociaux (LinkedIn, X/Twitter, Instagram, Facebook) avec liens placeholders et styles hover cohérents.
 - Fichiers SEO robots/sitemap: `public/robots.txt` et `public/sitemap.xml` avec les routes principales.
 - Un workflow GitHub Actions (`.github/workflows/ci.yml`) a été ajouté pour automatiser les vérifications de qualité (type-check, linting, tests & build) sur chaque `push` et `pull_request` vers `main`.
 - ESLint est configuré pour interdire l’utilisation de `any` via la règle `@typescript-eslint/no-explicit-any: "error"`.
@@ -17,13 +18,14 @@
   - `src/main.tsx`: point d’entrée React strictement typé + `HelmetProvider`
   - `src/App.tsx`: App avec Router, Nav accessible, lazy routes et Suspense (+ route 404)
   - `src/components/ErrorBoundary.tsx`: ErrorBoundary React (sans Sentry) avec fallback UI
+  - `src/components/Footer.tsx`: footer avec icônes SVG (LinkedIn, X, Instagram, Facebook) et URLs placeholders
   - Design System (UI):
     - `src/components/ui/Button.tsx`, `src/components/ui/ButtonLink.tsx`
     - `src/components/ui/Card.tsx` (Card, CardHeader, CardTitle, CardContent)
     - `src/components/ui/Badge.tsx` (Badge + CategoryBadge)
     - `src/components/ui/cn.ts` (utilitaire classes)
   - `src/pages/Home.tsx`, `src/pages/Fleet.tsx`, `src/pages/Support.tsx`: pages typées avec balises `<Helmet>` (SEO), refactorisées pour utiliser Button/Card/Badge (Support: informations de contact uniquement, pas de formulaire)
-  - `src/pages/NotFound.tsx`: page 404 accessible avec `noindex`
+  - `src/pages/NotFound.tsx`: page 404 custom (grand titre, message amical, CTA “Retourner à l’accueil”) + petite illustration SVG animée
   - `src/data/vehicles.ts`: données typées partagées
   - `src/types/index.ts`: définitions de types partagés (Vehicle, VehicleCategory)
   - `src/index.css`: base Tailwind et font
@@ -41,9 +43,9 @@
   - `eslint.config.js`: ajout de la règle `@typescript-eslint/no-explicit-any: "error"`, intégration `eslint-config-prettier` et `eslint-plugin-jsx-a11y` (flat config recommandé)
   - `tailwind.config.js`: ajout du champ `content` pour inclure `./index.html` et `./src/**/*.{ts,tsx}`, et ajout de tokens (colors, borderRadius, boxShadow)
   - `vite.config.ts`: ajout `vite-plugin-pwa` (manifest/workbox) + configuration des tests (Vitest: jsdom, setupFiles, globals)
-  - `index.html`: métadonnées SEO (OG/Twitter), `theme-color`
+  - `index.html`: métadonnées SEO (OG/Twitter) mises en placeholders (URL_DU_SITE_PLACEHOLDER, TITRE_DU_SITE_PLACEHOLDER, DESCRIPTION_COURTE_DU_SITE_PLACEHOLDER, URL_VERS_UNE_IMAGE_REPRESENTATIVE_PLACEHOLDER) + `theme-color`
   - `public/sitemap.xml`: remplacement de `/contact` par `/support`
-  - `src/App.tsx`: mise à jour de la nav et des routes vers `/support`
+  - `src/App.tsx`: ajout du Footer et mise à jour de la nav/routes vers `/support`
   - `package.json`:
     - scripts: `typecheck`, `test`, `test:run`, `format`, `format:fix`, `prepare`
     - `lint-staged` config
@@ -57,7 +59,8 @@
 - [x] Routing + code-splitting + a11y de base en place
 - [x] PWA configurée (manifest auto, service worker Workbox)
 - [x] SEO de base (OG/Twitter + titres/descriptions par page)
-- [x] 404 avec `noindex` + robots/sitemap ajoutés
+- [x] 404 custom + robots/sitemap ajoutés
+- [x] Footer avec icônes réseaux sociaux (placeholders)
 - [x] Error boundary global (sans Sentry)
 - [x] ESLint interdit explicitement `any`
 - [x] CI (install, type-check, lint, tests, build) ajoutée

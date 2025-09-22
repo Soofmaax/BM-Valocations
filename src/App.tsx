@@ -4,6 +4,7 @@ import AppErrorBoundary from './components/ErrorBoundary';
 import SkipLink from './components/SkipLink';
 import RouteAnnouncer from './components/RouteAnnouncer';
 import RouteFocusHandler from './components/RouteFocusHandler';
+import Footer from './components/Footer';
 
 const Home = lazy(() => import('./pages/Home'));
 const Fleet = lazy(() => import('./pages/Fleet'));
@@ -79,6 +80,8 @@ export default function App() {
             </Suspense>
           </AppErrorBoundary>
         </main>
+
+        <Footer />
       </div>
     </BrowserRouter>
   );

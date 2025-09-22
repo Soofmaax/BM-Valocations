@@ -1,0 +1,29 @@
+name: CI - Vérification du Code et Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Installation des dépendances
+        run: npm install
+
+      - name: Linter (ESLint)
+        run: npm run lint
+
+      - name: Build du projet
+        run: npm run build

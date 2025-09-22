@@ -44,11 +44,14 @@
   - `eslint.config.js`: ajout de la règle `@typescript-eslint/no-explicit-any: "error"`, intégration `eslint-config-prettier` et `eslint-plugin-jsx-a11y` (flat config recommandé)
   - `tailwind.config.js`: ajout du champ `content` pour inclure `./index.html` et `./src/**/*.{ts,tsx}`, et ajout de tokens (colors, borderRadius, boxShadow)
   - `vite.config.ts`: ajout `vite-plugin-pwa` (manifest/workbox) + configuration des tests (Vitest: jsdom, setupFiles, globals)
-  - `index.html`: métadonnées SEO (OG/Twitter) mises à jour pour `https://bm-valocations.com/` avec l’OG image locale `https://bm-valocations.com/og-image.png` et dimensions (1200x630)
+  - `index.html`: 
+    - métadonnées SEO (OG/Twitter) mises à jour pour `https://bm-valocations.com/` avec l’OG image locale `https://bm-valocations.com/og-image.png` et dimensions (1200x630)
+    - ajout de `<link rel="canonical" href="https://bm-valocations.com/">`
+    - ajout des favicons et Apple Touch Icon (`/favicon-32x32.png`, `/favicon-16x16.png`, `/apple-touch-icon.png`) et du lien `manifest`
   - `public/sitemap.xml`: remplacement de `/contact` par `/support`
   - `src/App.tsx`: ajout du Footer et mise à jour de la nav/routes vers `/support`
   - `package.json`:
-    - scripts: ajout de `prebuild` (génération OG image)
+    - scripts: ajout de `prebuild` (génération OG image + favicons)
     - deps/devDeps: ajout de `satori` et `@resvg/resvg-js`
     - scripts existants: `typecheck`, `test`, `test:run`, `format`, `format:fix`, `prepare`
     - `lint-staged` config

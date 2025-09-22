@@ -15,10 +15,10 @@ async function fetchFont(url) {
   return Buffer.from(ab);
 }
 
-async function renderToPng(svg) {
+async function renderToPng(svg, { bg = '#111827', targetWidth } = {}) {
   const resvg = new Resvg(svg, {
-    fitTo: { mode: 'width', value: width },
-    background: '#111827',
+    fitTo: targetWidth ? { mode: 'width', value: targetWidth } : { mode: 'width', value: width },
+    background: bg,
   });
   return resvg.render().asPng();
 }
@@ -288,6 +288,54 @@ async function generateSupportImage(fonts) {
   return renderToPng(svg);
 }
 
+async function generateIcons(fonts) {
+  // Simple monogram "BM" on primary background
+  const svg = await satori(
+    {
+      type: 'div',
+      props: {
+        style: {
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#111827',
+          color: '#f9fafb',
+        },
+        children: {
+          type: 'div',
+          props: {
+            style: {
+              fontSize: 84,
+              fontWeight: 800,
+              fontFamily: 'Sora',
+              letterSpacing: '-2px',
+            },
+            children: 'BM',
+          },
+        },
+      },
+    },
+    { width: 512, height: 512, fonts }
+  );
+
+  const basePng = await renderToPng(svg, { targetWidth: 512 });
+  // Downscale for needed sizes
+  const icon180 = await renderToPng(svg, { targetWidth: 180 });
+  const icon32 = await renderToPng(svg, { targetWidth: 32 });
+  const icon16 = await renderToPng(svg, { targetWidth: 16 });
+
+  const outDir = path.resolve('public');
+  await mkdir(outDir, { recursive: true });
+  await Promise.all([
+    writeFile(path.join(outDir, 'apple-touch-icon.png'), icon180),
+    writeFile(path.join(outDir, 'favicon-32x32.png'), icon32),
+    writeFile(path.join(outDir, 'favicon-16x16.png'), icon16),
+    writeFile(path.join(outDir, 'icon-512.png'), basePng),
+  ]);
+}
+
 async function main() {
   const [soraRegular, soraBold] = await Promise.all([
     fetchFont('https://github.com/google/fonts/raw/main/ofl/sora/Sora-Regular.ttf'),
@@ -319,17 +367,23 @@ async function main() {
     writeFile(supportOut, supportPng),
   ]);
 
+  await generateIcons(fonts);
+
   // eslint-disable-next-line no-console
-  console.log(`OG images generated at:
+  console.log(`OG images and icons generated:
   - ${baseOut}
   - ${homeOut}
   - ${fleetOut}
   - ${supportOut}
-(${width}x${height})`);
+  - public/apple-touch-icon.png
+  - public/favicon-32x32.png
+  - public/favicon-16x16.png
+  - public/icon-512.png
+(${width}x${height} for OG, various for icons)`);
 }
 
 main().catch((err) => {
   // eslint-disable-next-line no-console
-  console.error('Failed to generate OG image(s):', err);
+  console.error('Failed to generate OG image(s) or icons:', err);
   process.exit(1);
 });

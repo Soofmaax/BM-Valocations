@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { vehicles } from '../data/vehicles';
+import ButtonLink from '../components/ui/ButtonLink';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 
 export default function Home() {
   return (
@@ -21,19 +22,21 @@ export default function Home() {
         categories to find the perfect ride.
       </p>
 
-      <div className="bg-white border rounded-lg p-4 shadow-sm" aria-live="polite">
-        <p className="text-sm text-gray-600">
-          Total vehicles available now: <span className="font-semibold">{vehicles.length}</span>
-        </p>
-      </div>
+      <Card aria-live="polite">
+        <CardHeader>
+          <CardTitle className="text-lg">Fleet overview</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>
+            Total vehicles available now: <span className="font-semibold">{vehicles.length}</span>
+          </p>
+        </CardContent>
+      </Card>
 
       <div>
-        <Link
-          to="/fleet"
-          className="inline-flex items-center px-3 py-2 rounded bg-gray-900 text-white hover:bg-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-800"
-        >
+        <ButtonLink to="/fleet" variant="primary" size="md">
           Browse fleet
-        </Link>
+        </ButtonLink>
       </div>
     </section>
   );

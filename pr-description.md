@@ -17,7 +17,12 @@
   - `src/main.tsx`: point d’entrée React strictement typé + `HelmetProvider`
   - `src/App.tsx`: App avec Router, Nav accessible, lazy routes et Suspense (+ route 404)
   - `src/components/ErrorBoundary.tsx`: ErrorBoundary React (sans Sentry) avec fallback UI
-  - `src/pages/Home.tsx`, `src/pages/Fleet.tsx`, `src/pages/Contact.tsx`: pages typées avec balises `<Helmet>` (SEO)
+  - Design System (UI):
+    - `src/components/ui/Button.tsx`, `src/components/ui/ButtonLink.tsx`
+    - `src/components/ui/Card.tsx` (Card, CardHeader, CardTitle, CardContent)
+    - `src/components/ui/Badge.tsx` (Badge + CategoryBadge)
+    - `src/components/ui/cn.ts` (utilitaire classes)
+  - `src/pages/Home.tsx`, `src/pages/Fleet.tsx`, `src/pages/Contact.tsx`: pages typées avec balises `<Helmet>` (SEO), refactorisées pour utiliser Button/Card/Badge
   - `src/pages/NotFound.tsx`: page 404 accessible avec `noindex`
   - `src/data/vehicles.ts`: données typées partagées
   - `src/types/index.ts`: définitions de types partagés (Vehicle, VehicleCategory)
@@ -34,7 +39,7 @@
   - `.husky/pre-push`: `npm run typecheck` + `npm run test:run`
 - Modification:
   - `eslint.config.js`: ajout de la règle `@typescript-eslint/no-explicit-any: "error"`, intégration `eslint-config-prettier` et `eslint-plugin-jsx-a11y` (flat config recommandé)
-  - `tailwind.config.js`: ajout du champ `content` pour inclure `./index.html` et `./src/**/*.{ts,tsx}` afin d’éviter la purge des classes utilisées
+  - `tailwind.config.js`: ajout du champ `content` pour inclure `./index.html` et `./src/**/*.{ts,tsx}`, et ajout de tokens (colors, borderRadius, boxShadow)
   - `vite.config.ts`: ajout `vite-plugin-pwa` (manifest/workbox) + configuration des tests (Vitest: jsdom, setupFiles, globals)
   - `index.html`: métadonnées SEO (OG/Twitter), `theme-color`
   - `package.json`:

@@ -3,6 +3,22 @@ export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
+      colors: {
+        primary: {
+          DEFAULT: '#111827', // gray-900
+          foreground: '#ffffff',
+        },
+        surface: '#ffffff',
+        muted: '#6b7280', // gray-500
+        accent: '#f59e0b', // amber-500
+        success: '#10b981', // emerald-500
+      },
+      borderRadius: {
+        brand: '0.5rem',
+      },
+      boxShadow: {
+        brand: '0 1px 2px 0 rgb(0 0 0 / 0.04), 0 1px 1px -1px rgb(0 0 0 / 0.04)',
+      },
       animation: {
         'fade-in': 'fade-in 0.3s ease-out',
         'slide-up': 'slide-up 0.3s ease-out',

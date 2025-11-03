@@ -325,7 +325,25 @@ export default function Home() {
       </section>
 
       {/* Cars Grid */}
-      <section id="nos-voitures" className="max-w-7xl mx-auto px-4 py-16">
+      <section id="nos-voitures" className="m className="max-w-7xl mx-auto px-4 py-12">
+       < div className="grid md:grid-cols-3 gap-6">
+         < div className="bg-white rounded-2xl shadow p-6">
+           < div className="text-3xl mb-3"></🔎div>
+           < h3 className="text-lg font-semibold mb-2">1. Choisiss</ezh3>
+           < p className="text-gray-600">
+              Filtrez selon votre usage et votre budget. Repérez les modèles disponibles et ceux à venir.
+          </  p>
+        </  div>
+         < div className="bg-white rounded-2xl shadow p-6">
+           < div className="text-3xl mb-3"></📝div>
+           < h3 className="text-lg font-semibold mb-2">2. Demand</ezh3>
+           < p className="text-gray-600">
+              Cliquez sur “Voir les détails” ou “Me prévenir” et envoyez votre demande d’essai ou de notification.
+          </  p>
+        </  div>
+         < div className="bg-white rounded-2xl shadow p-6">
+           < div className="text-3xl mb-3"></🚗div>
+           < h3 className="text-lg font-semibold mbax-w-7xl mx-auto px-4 py-16">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Nos citadines disponibles</h2>
           <p className="text-xl text-gray-600">

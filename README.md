@@ -53,6 +53,7 @@ A modern, accessible, and production-ready frontend for a premium car rental ser
 - Security
 - License
 - Brand assets (single source)
+- Funnel marketing & upsell (ebooks) — see docs/FUNNEL_MARKETING_UPSELL.md
 - Acknowledgments
 
 ## Features
@@ -148,7 +149,7 @@ See docs/ACCESSIBILITY.md.
 - PWA via vite-plugin-pwa (manifest + service worker auto-update)
 - robots.txt + sitemap.xml
 
-See docs/SEO_PWA.md.
+See docs/SEO_PWA.md and docs/SEO_LOCAL_AI.md for local SEO & AI-friendly guidelines.
 
 ## CI/CD
 
@@ -175,6 +176,122 @@ Deployment checklist (final launch reminders):
 - Replace placeholder emails with your agency addresses (README, SUPPORT.md, SECURITY.md)
 - Replace README badges (CI/Deployment) with real links if not done yet
 - Provide final OG image(s) and favicon(s) if the brand logo is available
+
+---
+
+## Mini‑guide — Mettre à jour la liste des voitures (statique)
+
+Public visé: l’équipe non technique qui souhaite changer les voitures “de temps en temps” sans maintenance continue.
+
+Où se trouve la liste
+- Fichier: `src/data/citadines.ts`
+- C’est un tableau d’objets JavaScript. Chaque objet correspond à une voiture.
+
+Champs disponibles par voiture
+- Obligatoires:
+  - `id` (number, unique), `name` (string), `emoji` (string), `price` (number, en €), `monthly` (number, €/mois)
+  - `image` (URL d’image), `electric` (boolean), `available` (boolean), `location` (string), `tags` (string[])
+- Optionnels:
+  - `gallery` (string[]): plusieurs images
+  - `specs`: `{ seats?: number, doors?: number, transmission?: 'auto' | 'manual', powerKw?: number, rangeKm?: number, trunkLiters?: number }`
+
+Exemple d’entrée
+```ts
+{
+  id: 5,
+  name: 'Peugeot 108',
+  emoji: '🚗',
+  price: 7900,
+  monthly: 139,
+  image: 'https://images.unsplash.com/photo-....?w=800&q=80',
+  gallery: [
+    'https://images.unsplash.com/photo-....?w=1200&q=80',
+    'https://images.unsplash.com/photo-....?w=1200&q=80',
+  ],
+  electric: false,
+  available: true, // si false, le bouton affiche “Me prévenir”
+  location: 'Nice',
+  tags: ['Facile à garer', 'Économique'],
+  specs: { seats: 4, doors: 5, transmission: 'manual', powerKw: 53, trunkLiters: 196 }
+}
+```
+
+Ce que contrôlent certains champs
+- `available: false` → affiche “Me prévenir” et ouvre un formulaire (vous recevez l’email, pas d’auto‑réponse au client)
+- `electric: true` → badge “Électrique” sur la carte
+- `tags` → utilisés par les filtres (ex: “Facile à garer”, “Éco”, “Petits budgets”, “Weekend”, “Famille”)
+
+Comment modifier/ajouter/supprimer une voiture
+1) Ouvrir `src/data/citadines.ts`
+2) Ajouter/éditer/supprimer des objets du tableau `citadines`
+3) Sauvegarder
+
+Aperçu local (facultatif)
+- Lancer le site en local pour vérifier:
+  - `npm install` (première fois)
+  - `npm run dev` → http://localhost:5173
+
+Mettre en ligne
+- Si vous utilisez Vercel/Netlify/GitHub Pages:
+  - Commitez vos changements puis déployez
+- Build statique:
+  - `npm run build` puis servez le dossier `dist/`
+
+Bonnes pratiques
+- Utiliser des images publiques (Unsplash/serveur) avec `?w=1200&q=80` pour de bonnes tailles/qualité
+- Garder des `id` uniques et stables
+- Mettre `available: false` si le véhicule n’est plus disponible pour basculer automatiquement sur “Me prévenir”
+- Ne pas ajouter de secrets (emails/numéros) dans `citadines.ts` (c’est un fichier public)
+
+Option “sans rebuild” (au besoin)
+- Si vous souhaitez éditer la liste sans redéployer, nous pouvons basculer vers un fichier JSON public (hébergé sur un CDN ou GitHub) que vous remplacerez à l’occasion. Demandez à l’équipe technique d’activer ce mode.
+
+## Données dynamiques via JSON public (sans redeploy)
+
+Si vous souhaitez mettre à jour la liste des citadines sans redéployer:
+
+1) Hébergez un fichier JSON public (ex: GitHub raw) avec la liste des voitures.
+- Exemple de contenu:
+```json
+[
+  {
+    "id": 1,
+    "name": "Fiat 500 Pop",
+    "emoji": "🍋",
+    "price": 8900,
+    "monthly": 159,
+    "image": "https://images.unsplash.com/photo-1614162692292-7ac56d7f8563?w=800&q=80",
+    "gallery": ["https://...w=1200&q=80"],
+    "electric": true,
+    "available": true,
+    "location": "Paris 11e",
+    "tags": ["Facile à garer", "Électrique", "Rétro-chic"],
+    "specs": { "seats": 4, "doors": 3, "transmission": "auto", "powerKw": 70, "rangeKm": 180, "trunkLiters": 185 }
+  }
+]
+```
+
+2) Configurez l’URL dans votre environnement (Vite):
+- VITE_CITADINES_URL="https://raw.githubusercontent.com/…/citadines.json"
+
+3) Comportement de l’app:
+- L’app affiche tout de suite la liste locale (src/data/citadines.ts) pour un rendu instantané.
+- Ensuite, elle charge le JSON public et remplace l’affichage si le JSON est valide.
+- En cas d’erreur (URL indisponible, JSON invalide), l’app garde la liste locale.
+
+4) Où est gérée la logique:
+- Loader: `src/lib/citadines.ts` (loadCitadines / loadCitadinesWithFallback)
+- Pages: `src/pages/Home.tsx` et `src/pages/CarDetails.tsx` utilisent ce loader.
+
+5) Mettre à jour la liste sans redeploy:
+- Remplacez le fichier JSON public → rechargez la page → les nouvelles voitures s’affichent.
+- Pas besoin de commit ni de build.
+
+6) Modèle et validation avant mise en ligne:
+- Modèle JSON: `docs/citadines.template.json`
+- Validation locale: `node scripts/validate-citadines.mjs ./citadines.json`
+  - Le script vérifie le format, les URLs, la présence des champs requis et l’unicité des id.
+  - Retour 0 si tout est valide, 1 sinon (avec détails des erreurs).
 
 ## Screenshots
 
@@ -227,11 +344,15 @@ MIT — see LICENSE.
 
 Place your final logo at public/brand/logo.svg and run npm run build. The prebuild script will generate favicons, Apple Touch Icon and OG images automatically. See docs/BRAND_ASSETS.md.
 
-## Credits / Attribution
+## Développé par
 
-Built by <a href="https://your-agency.tld" target="_blank" rel="noopener noreferrer">Your Agency</a>.
+Ce projet a été conçu et développé par <a href="https://smarterlogiqueweb.com" target="_blank" rel="noopener noreferrer">SmarterLogic Web</a>.
 
-> TODO: Replace “Your Agency” and the URL with your actual agency name and website once available.
+Pour en savoir plus ou pour nous contacter, visitez notre site : <a href="https://smarterlogiqueweb.com" target="_blank" rel="noopener noreferrer">smarterlogiqueweb.com</a>.
+
+- Branding & Identité Visuelle
+- Développement Front-End
+- Optimisation SEO
 
 ## Acknowledgments
 

@@ -8,6 +8,8 @@ export default function RouteFocusHandler() {
     if (main) {
       main.focus();
     }
+    // Ensure scroll to top on route changes for consistent UX across pages
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   }, [location.pathname]);
   return null;
 }

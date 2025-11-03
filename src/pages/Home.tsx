@@ -173,6 +173,9 @@ export default function Home() {
             <a href="#temoignages" className="hover:text-orange-500 transition">
               Témoignages
             </a>
+            <a href="/mentions-legales" className="hover:text-orange-500 transition">
+              Mentions légales
+            </a>
           </nav>
           <button className="bg-orange-500 text-white px-6 py-2 rounded-full hover:bg-orange-600 transition flex items-center gap-2">
             <Phone size={18} />

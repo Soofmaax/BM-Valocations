@@ -69,6 +69,17 @@ function AppShell() {
               >
                 Support
               </NavLink>
+              <NavLink
+                to="/mentions-legales"
+                className={({ isActive }) =>
+                  `text-sm font-medium hover:underline focus-visible:underline ${
+                    isActive ? 'text-gray-900' : 'text-gray-600'
+                  }`
+                }
+                aria-current={({ isActive }) => (isActive ? 'page' : undefined)}
+              >
+                Mentions légales
+              </NavLink>
             </nav>
           </div>
         </header>

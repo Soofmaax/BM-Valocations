@@ -1,0 +1,81 @@
+name: Screenshots - Generate and Publish
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Check production availability
+        id: prodcheck
+        run: |
+          set -e
+          if curl -sSfI https://bm-valocations.com/ >/dev/null; then
+            echo "ok=true" >> $GITHUB_OUTPUT
+          else
+            echo "ok=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build and preview locally (fallback)
+        if: steps.prodcheck.outputs.ok != 'true'
+        run: |
+          npm run build
+          nohup npm run preview:ci >/dev/null 2>&1 &
+          for i in {1..30}; do
+            if curl -sSf http://127.0.0.1:4173 >/dev/null; then
+              echo "Preview server is up."
+              break
+            fi
+            echo "Waiting for preview server..."
+            sleep 2
+          done
+
+      - name: Capture screenshots (desktop + tablet + mobile)
+        env:
+          BASE_URL: ${{ steps.prodcheck.outputs.ok == 'true' && 'https://bm-valocations.com' || 'http://127.0.0.1:4173' }}
+          SCREENSHOTS_DESKTOP: '1'
+          SCREENSHOTS_TABLET: '1'
+          SCREENSHOTS_MOBILE: '1'
+        run: npm run screenshots
+
+      - name: Upload screenshots as artifact (PRs)
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: docs/screenshots/*.png
+
+      - name: Commit screenshots to repo (main)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          if git diff --quiet -- docs/screenshots; then
+            echo "No screenshot changes to commit."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add docs/screenshots/*.png
+            git commit -m "chore: update screenshots [skip ci]"
+            git push
+          fi

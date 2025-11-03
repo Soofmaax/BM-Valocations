@@ -1,0 +1,40 @@
+name: CI - Vérification du Code et Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20]
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Installation des dépendances
+        run: npm install
+
+      - name: Type Check (tsc)
+        run: npm run typecheck
+
+      - name: Linter (ESLint)
+        run: npm run lint
+
+      - name: Tests (Vitest)
+        run: npm run test:run
+
+      - name: Build du projet
+        run: npm run build

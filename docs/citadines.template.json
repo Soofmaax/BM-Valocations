@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "name": "Fiat 500 Pop",
+    "emoji": "🍋",
+    "price": 8900,
+    "monthly": 159,
+    "image": "https://images.unsplash.com/photo-1614162692292-7ac56d7f8563?w=800&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1614162692292-7ac56d7f8563?w=1200&q=80"
+    ],
+    "electric": true,
+    "available": true,
+    "location": "Paris 11e",
+    "tags": ["Facile à garer", "Électrique", "Rétro-chic"],
+    "specs": {
+      "seats": 4,
+      "doors": 3,
+      "transmission": "auto",
+      "powerKw": 70,
+      "rangeKm": 180,
+      "trunkLiters": 185
+    }
+  },
+  {
+    "id": 2,
+    "name": "Renault Twingo",
+    "emoji": "🎨",
+    "price": 7500,
+    "monthly": 139,
+    "image": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&q=80",
+    "electric": false,
+    "available": true,
+    "location": "Lyon 2e",
+    "tags": ["Petits budgets", "Parfait ville", "Fun"]
+  }
+]

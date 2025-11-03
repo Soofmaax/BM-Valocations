@@ -286,6 +286,12 @@ Si vous souhaitez mettre à jour la liste des citadines sans redéployer:
 - Remplacez le fichier JSON public → rechargez la page → les nouvelles voitures s’affichent.
 - Pas besoin de commit ni de build.
 
+6) Modèle et validation avant mise en ligne:
+- Modèle JSON: `docs/citadines.template.json`
+- Validation locale: `node scripts/validate-citadines.mjs ./citadines.json`
+  - Le script vérifie le format, les URLs, la présence des champs requis et l’unicité des id.
+  - Retour 0 si tout est valide, 1 sinon (avec détails des erreurs).
+
 ## Screenshots
 
 Add screenshots to showcase UX for your portfolio.

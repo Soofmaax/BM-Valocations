@@ -1,11 +1,10 @@
 /* Supabase Edge Function: test-drive
    - Validates payload
-   - Inserts into 'test_drives' using service role
+   - Sends an email to admin (no DB)
    - CORS enabled for browser calls
 */
 
 import { serve } from 'https://deno.land/std@0.224.0/http/server.ts'
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4'
 
 type Payload = {
   email?: string
@@ -23,6 +22,32 @@ function corsHeaders(origin: string | null) {
   }
 }
 
+async function sendEmail(to: string, subject: string, text: string) {
+  const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
+  const FROM = Deno.env.get('RESEND_FROM') || 'no-reply@example.com'
+  if (!RESEND_API_KEY) {
+    throw new Error('RESEND_API_KEY not set')
+  }
+
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: FROM,
+      to,
+      subject,
+      text,
+    }),
+  })
+  if (!res.ok) {
+    const body = await res.text()
+    throw new Error(`Email provider error: ${res.status} ${body}`)
+  }
+}
+
 serve(async (req: Request) => {
   const origin = req.headers.get('origin')
   if (req.method === 'OPTIONS') {
@@ -30,21 +55,13 @@ serve(async (req: Request) => {
   }
 
   try {
-    const url = Deno.env.get('SUPABASE_URL')!
-    const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') // must be set in function env
-    if (!url || !serviceKey) {
-      return new Response(JSON.stringify({ error: 'Service not configured' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) },
-      })
-    }
-
     const payload = (await req.json()) as Payload
 
     const email = (payload.email ?? '').toString().trim().toLowerCase()
     const when = (payload.when ?? '').toString().trim()
     const car_id = payload.car_id !== undefined ? Number(payload.car_id) : null
     const source = (payload.source ?? 'landing').toString()
+    const adminEmail = Deno.env.get('ADMIN_EMAIL') || 'contact@bm-valocations.com'
 
     if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
       return new Response(JSON.stringify({ error: 'Invalid email' }), {
@@ -59,22 +76,15 @@ serve(async (req: Request) => {
       })
     }
 
-    const supabase = createClient(url, serviceKey)
-    const { error } = await supabase.from('test_drives').insert({
-      email,
-      when,
-      car_id,
-      car_name: payload.car_name ?? null,
-      source,
-      created_at: new Date().toISOString(),
-    })
+    const subject = `Demande d'essai — ${payload.car_name ?? 'Citadine'}${car_id ? ` (ID ${car_id})` : ''}`
+    const text =
+      `Source: ${source}\n` +
+      `Email client: ${email}\n` +
+      (car_id ? `Voiture: ${payload.car_name ?? 'N/A'} (ID ${car_id})\n` : '') +
+      `Créneau souhaité: ${when}\n` +
+      `Date: ${new Date().toISOString()}\n`
 
-    if (error) {
-      return new Response(JSON.stringify({ error: error.message }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) },
-      })
-    }
+    await sendEmail(adminEmail, subject, text)
 
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,

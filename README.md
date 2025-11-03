@@ -245,6 +245,47 @@ Bonnes pratiques
 Option “sans rebuild” (au besoin)
 - Si vous souhaitez éditer la liste sans redéployer, nous pouvons basculer vers un fichier JSON public (hébergé sur un CDN ou GitHub) que vous remplacerez à l’occasion. Demandez à l’équipe technique d’activer ce mode.
 
+## Données dynamiques via JSON public (sans redeploy)
+
+Si vous souhaitez mettre à jour la liste des citadines sans redéployer:
+
+1) Hébergez un fichier JSON public (ex: GitHub raw) avec la liste des voitures.
+- Exemple de contenu:
+```json
+[
+  {
+    "id": 1,
+    "name": "Fiat 500 Pop",
+    "emoji": "🍋",
+    "price": 8900,
+    "monthly": 159,
+    "image": "https://images.unsplash.com/photo-1614162692292-7ac56d7f8563?w=800&q=80",
+    "gallery": ["https://...w=1200&q=80"],
+    "electric": true,
+    "available": true,
+    "location": "Paris 11e",
+    "tags": ["Facile à garer", "Électrique", "Rétro-chic"],
+    "specs": { "seats": 4, "doors": 3, "transmission": "auto", "powerKw": 70, "rangeKm": 180, "trunkLiters": 185 }
+  }
+]
+```
+
+2) Configurez l’URL dans votre environnement (Vite):
+- VITE_CITADINES_URL="https://raw.githubusercontent.com/…/citadines.json"
+
+3) Comportement de l’app:
+- L’app affiche tout de suite la liste locale (src/data/citadines.ts) pour un rendu instantané.
+- Ensuite, elle charge le JSON public et remplace l’affichage si le JSON est valide.
+- En cas d’erreur (URL indisponible, JSON invalide), l’app garde la liste locale.
+
+4) Où est gérée la logique:
+- Loader: `src/lib/citadines.ts` (loadCitadines / loadCitadinesWithFallback)
+- Pages: `src/pages/Home.tsx` et `src/pages/CarDetails.tsx` utilisent ce loader.
+
+5) Mettre à jour la liste sans redeploy:
+- Remplacez le fichier JSON public → rechargez la page → les nouvelles voitures s’affichent.
+- Pas besoin de commit ni de build.
+
 ## Screenshots
 
 Add screenshots to showcase UX for your portfolio.

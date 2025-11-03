@@ -2,10 +2,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Search, MapPin, Zap, Heart, Check, Star, ArrowRight, Phone, Calendar, X } from 'lucide-react';
-import { citadines } from '../data/citadines';
 import type { CitadineCar } from '../types';
 import { callEdge } from '../lib/api';
 import { track } from '../lib/analytics';
+import { loadCitadinesWithFallback } from '../lib/citadines';
 
 const DEFAULT_BUDGET_CAP = 8000;
 
@@ -23,11 +23,12 @@ export default function Home() {
   const [testDriveStatus, setTestDriveStatus] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle');
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [cars, setCars] = useState<CitadineCar[]>([]);
 
   const description =
     "Louez ou achetez la voiture parfaite pour votre vie urbaine. Simple, rapide, et sans prise de tête.";
 
-  // Init from URL
+  // Init from URL + load cars (local first, then remote)
   useEffect(() => {
     const filtersParam = searchParams.get('filters');
     const budgetParam = searchParams.get('budget');
@@ -43,6 +44,9 @@ export default function Home() {
     if (budgetParam && !Number.isNaN(Number(budgetParam))) {
       setBudgetCap(Number(budgetParam));
     }
+    // Load local immediately, then replace with remote if available
+    loadCitadinesWithFallback((remote) => setCars(remote)).then((local) => setCars(local));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // only once on mount
 
   // Persist to URL
@@ -60,8 +64,6 @@ export default function Home() {
     }
     setSearchParams(params, { replace: true });
   }, [activeFilters, budgetCap]);
-
-  const cars = citadines;
 
   const toggleFavorite = (id: number) => {
     setFavorites((prev) => (prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]));

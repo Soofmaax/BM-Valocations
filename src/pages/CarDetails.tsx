@@ -1,15 +1,22 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { MapPin, Zap, ArrowRight, X } from 'lucide-react';
-import { citadines } from '../data/citadines';
+import type { CitadineCar } from '../types';
 import { callEdge } from '../lib/api';
 import { track } from '../lib/analytics';
+import { loadCitadinesWithFallback } from '../lib/citadines';
 
 export default function CarDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const car = citadines.find((c) => String(c.id) === id);
+  const [cars, setCars] = useState<CitadineCar[]>([]);
+
+  useEffect(() => {
+    loadCitadinesWithFallback((remote) => setCars(remote)).then((local) => setCars(local));
+  }, []);
+
+  const car = useMemo(() => cars.find((c) => String(c.id) === id), [cars, id]);
 
   const [activeImg, setActiveImg] = useState(0);
   const [reserveOpen, setReserveOpen] = useState(false);
@@ -30,7 +37,7 @@ export default function CarDetails() {
   }
 
   const title = `${car.name} — Détails`;
-  const gallery = useMemo(() => car.gallery && car.gallery.length > 0 ? car.gallery : [car.image], [car]);
+  const gallery = useMemo(() => (car.gallery && car.gallery.length > 0 ? car.gallery : [car.image]), [car]);
 
   const submitReserve = async (e: React.FormEvent) => {
     e.preventDefault();

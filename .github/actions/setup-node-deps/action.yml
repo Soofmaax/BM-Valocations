@@ -1,0 +1,35 @@
+name: "Setup Node.js et installation des dépendances"
+description: "Installe Node.js avec cache npm et installe les dépendances (npm ci si possible, sinon npm install)."
+inputs:
+  node-version:
+    description: "Version de Node.js"
+    required: false
+    default: "20"
+  prefer-ci:
+    description: "Tenter npm ci d'abord (true/false)"
+    required: false
+    default: "true"
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: npm
+        cache-dependency-path: package-lock.json
+
+    - name: Installer les dépendances
+      shell: bash
+      run: |
+        set -e
+        if [ "${{ inputs.prefer-ci }}" = "true" ] && [ -f package-lock.json ]; then
+          echo "Tentative d'installation via npm ci"
+          if npm ci; then
+            echo "Installation via npm ci réussie."
+            exit 0
+          else
+            echo "npm ci a échoué, bascule vers npm install."
+          fi
+        fi
+        npm install

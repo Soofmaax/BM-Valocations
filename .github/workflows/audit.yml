@@ -11,14 +11,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Node.js et installer les dépendances
+        uses: ./.github/actions/setup-node-deps
         with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm install
+          node-version: "20"
+          prefer-ci: "true"
 
       - name: Check production availability
         id: prodcheck

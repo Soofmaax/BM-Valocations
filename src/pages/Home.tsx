@@ -1,34 +1,78 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Search, MapPin, Zap, Heart, Check, Star, ArrowRight, Phone, Calendar, X } from 'lucide-react';
 import { citadines } from '../data/citadines';
 import type { CitadineCar } from '../types';
+import { insertRow } from '../lib/supabaseClient';
+import { track } from '../lib/analytics';
+
+const DEFAULT_BUDGET_CAP = 8000;
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'achat' | 'location'>('achat');
   const [favorites, setFavorites] = useState<number[]>([]);
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [budgetCap, setBudgetCap] = useState<number>(DEFAULT_BUDGET_CAP);
   const [notifyCarId, setNotifyCarId] = useState<number | null>(null);
   const [notifyEmail, setNotifyEmail] = useState('');
+  const [notifyStatus, setNotifyStatus] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle');
   const [testDriveOpen, setTestDriveOpen] = useState(false);
   const [testDriveEmail, setTestDriveEmail] = useState('');
   const [testDriveWhen, setTestDriveWhen] = useState('');
+  const [testDriveStatus, setTestDriveStatus] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle');
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const description =
     "Louez ou achetez la voiture parfaite pour votre vie urbaine. Simple, rapide, et sans prise de tête.";
 
+  // Init from URL
+  useEffect(() => {
+    const filtersParam = searchParams.get('filters');
+    const budgetParam = searchParams.get('budget');
+    if (filtersParam) {
+      try {
+        const decoded = decodeURIComponent(filtersParam);
+        const arr = decoded.split(',').map((s) => s.trim()).filter(Boolean);
+        setActiveFilters(arr);
+      } catch {
+        // ignore
+      }
+    }
+    if (budgetParam && !Number.isNaN(Number(budgetParam))) {
+      setBudgetCap(Number(budgetParam));
+    }
+  }, []); // only once on mount
+
+  // Persist to URL
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    if (activeFilters.length > 0) {
+      params.set('filters', encodeURIComponent(activeFilters.join(',')));
+    } else {
+      params.delete('filters');
+    }
+    if (budgetCap !== DEFAULT_BUDGET_CAP) {
+      params.set('budget', String(budgetCap));
+    } else {
+      params.delete('budget');
+    }
+    setSearchParams(params, { replace: true });
+  }, [activeFilters, budgetCap]);
+
   const cars = citadines;
 
   const toggleFavorite = (id: number) => {
     setFavorites((prev) => (prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]));
+    track('favorite_toggle', { id });
   };
 
   const toggleFilter = (label: string) => {
     setActiveFilters((prev) =>
       prev.includes(label) ? prev.filter((l) => l !== label) : [...prev, label]
     );
+    track('filter_toggle', { label });
   };
 
   const matchesFilter = (car: CitadineCar, label: string) => {
@@ -36,7 +80,7 @@ export default function Home() {
       case 'Électrique':
         return car.electric || car.tags.some((t) => /électrique/i.test(t));
       case 'Petits budgets':
-        return car.price < 8000 || car.tags.includes('Petits budgets');
+        return car.price <= budgetCap || car.tags.includes('Petits budgets');
       case 'Facile à garer':
         return car.tags.includes('Facile à garer');
       case 'Éco':
@@ -53,33 +97,54 @@ export default function Home() {
   const filteredCars = useMemo(() => {
     if (activeFilters.length === 0) return cars;
     return cars.filter((car) => activeFilters.some((f) => matchesFilter(car, f)));
-  }, [cars, activeFilters]);
+  }, [cars, activeFilters, budgetCap]);
 
   const openNotifyModal = (carId: number) => {
     setNotifyCarId(carId);
     setNotifyEmail('');
+    setNotifyStatus('idle');
+    track('notify_open', { carId });
   };
 
-  const submitNotify = (e: React.FormEvent) => {
+  const submitNotify = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!notifyCarId) return;
+    setNotifyStatus('loading');
     const car = cars.find((c) => c.id === notifyCarId);
-    const subject = encodeURIComponent(`Notification disponibilité — ${car?.name}`);
-    const body = encodeURIComponent(
-      `Bonjour,\n\nMerci de me prévenir lorsque ${car?.name} (ID ${car?.id}) sera disponible.\n\nMon email : ${notifyEmail}\n\nCordialement.`
-    );
-    window.location.href = `mailto:contact@bm-valocations.com?subject=${subject}&body=${body}`;
-    setNotifyCarId(null);
+    const { ok } = await insertRow('notifications', {
+      email: notifyEmail,
+      car_id: notifyCarId,
+      car_name: car?.name,
+      created_at: new Date().toISOString(),
+      source: 'landing',
+    });
+    if (ok) {
+      setNotifyStatus('sent');
+      track('notify_submit', { carId: notifyCarId });
+      setTimeout(() => setNotifyCarId(null), 800);
+    } else {
+      setNotifyStatus('error');
+    }
   };
 
-  const submitTestDrive = (e: React.FormEvent) => {
+  const submitTestDrive = async (e: React.FormEvent) => {
     e.preventDefault();
-    const subject = encodeURIComponent('Demande essai gratuit — CitaDrive');
-    const body = encodeURIComponent(
-      `Bonjour,\n\nJe souhaite réserver un essai gratuit.\nQuand: ${testDriveWhen}\nEmail: ${testDriveEmail}\n\nMerci.`
-    );
-    window.location.href = `mailto:contact@bm-valocations.com?subject=${subject}&body=${body}`;
-    setTestDriveOpen(false);
+    setTestDriveStatus('loading');
+    const { ok } = await insertRow('test_drives', {
+      email: testDriveEmail,
+      when: testDriveWhen,
+      created_at: new Date().toISOString(),
+      source: 'landing',
+    });
+    if (ok) {
+      setTestDriveStatus('sent');
+      track('testdrive_submit', {});
+      setTimeout(() => setTestDriveOpen(false), 800);
+      setTestDriveEmail('');
+      setTestDriveWhen('');
+    } else {
+      setTestDriveStatus('error');
+    }
   };
 
   return (
@@ -240,6 +305,19 @@ export default function Home() {
               </button>
             );
           })}
+        </div>
+        {/* Budget cap control (optionnel) */}
+        <div className="mt-6 flex items-center justify-center gap-3 text-sm text-gray-700">
+          <span>Plafond petits budgets:</span>
+          <input
+            type="number"
+            min={1000}
+            step={100}
+            value={budgetCap}
+            onChange={(e) => setBudgetCap(Number(e.target.value))}
+            className="w-28 border rounded-lg px-3 py-1 text-right"
+          />
+          <span>€</span>
         </div>
       </section>
 
@@ -490,10 +568,16 @@ export default function Home() {
               />
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-white py-3 rounded-xl font-medium hover:shadow-lg transition"
+                disabled={notifyStatus === 'loading'}
+                className="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-white py-3 rounded-xl font-medium hover:shadow-lg transition disabled:opacity-60"
               >
-                Envoyer
+                {notifyStatus === 'loading' ? 'Envoi…' : notifyStatus === 'sent' ? 'Envoyé ✓' : 'Envoyer'}
               </button>
+              {notifyStatus === 'error' && (
+                <p className="text-sm text-red-600">
+                  Une erreur est survenue. Vérifiez la configuration Supabase côté client.
+                </p>
+              )}
             </form>
           </div>
         </div>
@@ -529,10 +613,16 @@ export default function Home() {
               />
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-white py-3 rounded-xl font-medium hover:shadow-lg transition"
+                disabled={testDriveStatus === 'loading'}
+                className="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-white py-3 rounded-xl font-medium hover:shadow-lg transition disabled:opacity-60"
               >
-                Envoyer la demande
+                {testDriveStatus === 'loading' ? 'Envoi…' : testDriveStatus === 'sent' ? 'Envoyé ✓' : 'Envoyer la demande'}
               </button>
+              {testDriveStatus === 'error' && (
+                <p className="text-sm text-red-600">
+                  Une erreur est survenue. Vérifiez la configuration Supabase côté client.
+                </p>
+              )}
             </form>
           </div>
         </div>

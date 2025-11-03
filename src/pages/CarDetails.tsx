@@ -1,12 +1,21 @@
+import { useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { MapPin, Zap, ArrowRight } from 'lucide-react';
+import { MapPin, Zap, ArrowRight, X } from 'lucide-react';
 import { citadines } from '../data/citadines';
+import { insertRow } from '../lib/supabaseClient';
+import { track } from '../lib/analytics';
 
 export default function CarDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const car = citadines.find((c) => String(c.id) === id);
+
+  const [activeImg, setActiveImg] = useState(0);
+  const [reserveOpen, setReserveOpen] = useState(false);
+  const [reserveEmail, setReserveEmail] = useState('');
+  const [reserveWhen, setReserveWhen] = useState('');
+  const [reserveStatus, setReserveStatus] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle');
 
   if (!car) {
     return (
@@ -21,13 +30,28 @@ export default function CarDetails() {
   }
 
   const title = `${car.name} — Détails`;
+  const gallery = useMemo(() => car.gallery && car.gallery.length > 0 ? car.gallery : [car.image], [car]);
 
-  const handleReserve = () => {
-    const subject = encodeURIComponent(`Essai gratuit — ${car.name}`);
-    const body = encodeURIComponent(
-      `Bonjour,\n\nJe souhaite réserver un essai gratuit pour la ${car.name} (ID ${car.id}).\n\nCréneau souhaité : ____\nCoordonnées : ____\n\nMerci.`
-    );
-    window.location.href = `mailto:contact@bm-valocations.com?subject=${subject}&body=${body}`;
+  const submitReserve = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setReserveStatus('loading');
+    const { ok } = await insertRow('test_drives', {
+      email: reserveEmail,
+      when: reserveWhen,
+      car_id: car.id,
+      car_name: car.name,
+      created_at: new Date().toISOString(),
+      source: 'details',
+    });
+    if (ok) {
+      setReserveStatus('sent');
+      track('details_testdrive_submit', { carId: car.id });
+      setTimeout(() => setReserveOpen(false), 800);
+      setReserveEmail('');
+      setReserveWhen('');
+    } else {
+      setReserveStatus('error');
+    }
   };
 
   return (
@@ -50,16 +74,34 @@ export default function CarDetails() {
       </nav>
 
       <div className="grid md:grid-cols-2 gap-8">
-        <div className="relative">
-          <img
-            src={car.image}
-            alt={car.name}
-            className="w-full h-80 object-cover rounded-3xl shadow-2xl"
-          />
-          {car.electric && (
-            <div className="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm flex items-center gap-1">
-              <Zap size={14} />
-              Électrique
+        <div>
+          <div className="relative">
+            <img
+              src={gallery[activeImg]}
+              alt={`${car.name} image ${activeImg + 1}`}
+              className="w-full h-80 object-cover rounded-3xl shadow-2xl"
+            />
+            {car.electric && (
+              <div className="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm flex items-center gap-1">
+                <Zap size={14} />
+                Électrique
+              </div>
+            )}
+          </div>
+          {gallery.length > 1 && (
+            <div className="mt-3 grid grid-cols-4 gap-3">
+              {gallery.map((src, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setActiveImg(idx)}
+                  aria-label={`Voir image ${idx + 1}`}
+                  className={`h-16 rounded-xl overflow-hidden border ${
+                    idx === activeImg ? 'border-orange-500' : 'border-transparent'
+                  }`}
+                >
+                  <img src={src} alt="" className="w-full h-full object-cover" />
+                </button>
+              ))}
             </div>
           )}
         </div>
@@ -89,9 +131,37 @@ export default function CarDetails() {
             ))}
           </div>
 
+          {car.specs && (
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              {car.specs.seats !== undefined && (
+                <div className="bg-white rounded-xl p-3 shadow-sm border">Places: {car.specs.seats}</div>
+              )}
+              {car.specs.doors !== undefined && (
+                <div className="bg-white rounded-xl p-3 shadow-sm border">Portes: {car.specs.doors}</div>
+              )}
+              {car.specs.transmission && (
+                <div className="bg-white rounded-xl p-3 shadow-sm border">
+                  Boîte: {car.specs.transmission === 'auto' ? 'Automatique' : 'Manuelle'}
+                </div>
+              )}
+              {car.specs.powerKw !== undefined && (
+                <div className="bg-white rounded-xl p-3 shadow-sm border">Puissance: {car.specs.powerKw} kW</div>
+              )}
+              {car.specs.rangeKm !== undefined && (
+                <div className="bg-white rounded-xl p-3 shadow-sm border">Autonomie: {car.specs.rangeKm} km</div>
+              )}
+              {car.specs.trunkLiters !== undefined && (
+                <div className="bg-white rounded-xl p-3 shadow-sm border">Coffre: {car.specs.trunkLiters} L</div>
+              )}
+            </div>
+          )}
+
           <div className="flex gap-3">
             <button
-              onClick={handleReserve}
+              onClick={() => {
+                setReserveOpen(true);
+                track('details_testdrive_open', { carId: car.id });
+              }}
               className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-6 py-3 rounded-xl font-medium hover:shadow-lg transition flex items-center gap-2"
             >
               Réserver un essai
@@ -114,6 +184,51 @@ export default function CarDetails() {
           )}
         </div>
       </div>
+
+      {/* Reserve modal */}
+      {reserveOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setReserveOpen(false)} />
+          <div className="relative bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Réserver un essai — {car.name}</h3>
+              <button aria-label="Fermer" onClick={() => setReserveOpen(false)}>
+                <X size={20} />
+              </button>
+            </div>
+            <form onSubmit={submitReserve} className="space-y-3">
+              <input
+                type="email"
+                required
+                value={reserveEmail}
+                onChange={(e) => setReserveEmail(e.target.value)}
+                placeholder="Votre email"
+                className="w-full border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-orange-400"
+              />
+              <input
+                type="text"
+                required
+                value={reserveWhen}
+                onChange={(e) => setReserveWhen(e.target.value)}
+                placeholder="Quand souhaitez-vous essayer ?"
+                className="w-full border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-orange-400"
+              />
+              <button
+                type="submit"
+                disabled={reserveStatus === 'loading'}
+                className="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-white py-3 rounded-xl font-medium hover:shadow-lg transition disabled:opacity-60"
+              >
+                {reserveStatus === 'loading' ? 'Envoi…' : reserveStatus === 'sent' ? 'Envoyé ✓' : 'Envoyer la demande'}
+              </button>
+              {reserveStatus === 'error' && (
+                <p className="text-sm text-red-600">
+                  Une erreur est survenue. Vérifiez la configuration Supabase côté client.
+                </p>
+              )}
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

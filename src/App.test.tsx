@@ -2,13 +2,13 @@ import { render, screen } from '@testing-library/react';
 import App from './App';
 
 describe('App', () => {
-  it('renders the landing hero', () => {
+  it('renders the landing hero', async () => {
     render(<App />);
-    expect(screen.getByText(/Votre citadine idéale/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Votre citadine idéale/i)).toBeInTheDocument();
   });
 
-  it('renders cars section heading', () => {
+  it('renders cars section heading', async () => {
     render(<App />);
-    expect(screen.getByText(/Nos citadines disponibles/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Nos citadines disponibles/i)).toBeInTheDocument();
   });
 });

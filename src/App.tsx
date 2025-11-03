@@ -10,6 +10,7 @@ import ConstructionNotice from './components/ConstructionNotice';
 const Home = lazy(() => import('./pages/Home'));
 const Fleet = lazy(() => import('./pages/Fleet'));
 const Support = lazy(() => import('./pages/Support'));
+const CarDetails = lazy(() => import('./pages/CarDetails'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 function AppShell() {
@@ -86,6 +87,7 @@ function AppShell() {
               <Route path="/" element={<Home />} />
               <Route path="/fleet" element={<Fleet />} />
               <Route path="/support" element={<Support />} />
+              <Route path="/cars/:id" element={<CarDetails />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

@@ -1,67 +1,85 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Search, MapPin, Zap, Heart, Check, Star, ArrowRight, Phone, Calendar } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Search, MapPin, Zap, Heart, Check, Star, ArrowRight, Phone, Calendar, X } from 'lucide-react';
+import { citadines } from '../data/citadines';
+import type { CitadineCar } from '../types';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'achat' | 'location'>('achat');
   const [favorites, setFavorites] = useState<number[]>([]);
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [notifyCarId, setNotifyCarId] = useState<number | null>(null);
+  const [notifyEmail, setNotifyEmail] = useState('');
+  const [testDriveOpen, setTestDriveOpen] = useState(false);
+  const [testDriveEmail, setTestDriveEmail] = useState('');
+  const [testDriveWhen, setTestDriveWhen] = useState('');
+  const navigate = useNavigate();
 
   const description =
     "Louez ou achetez la voiture parfaite pour votre vie urbaine. Simple, rapide, et sans prise de tête.";
 
-  const cars = [
-    {
-      id: 1,
-      name: 'Fiat 500 Pop',
-      emoji: '🍋',
-      price: 8900,
-      monthly: 159,
-      image: 'https://images.unsplash.com/photo-1614162692292-7ac56d7f8563?w=800&q=80',
-      electric: true,
-      available: true,
-      location: 'Paris 11e',
-      tags: ['Facile à garer', 'Électrique', 'Rétro-chic'],
-    },
-    {
-      id: 2,
-      name: 'Renault Twingo',
-      emoji: '🎨',
-      price: 7500,
-      monthly: 139,
-      image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&q=80',
-      electric: false,
-      available: true,
-      location: 'Lyon 2e',
-      tags: ['Petits budgets', 'Parfait ville', 'Fun'],
-    },
-    {
-      id: 3,
-      name: 'Smart EQ',
-      emoji: '⚡',
-      price: 11900,
-      monthly: 189,
-      image: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=800&q=80',
-      electric: true,
-      available: false,
-      location: 'Marseille',
-      tags: ['100% électrique', 'Design unique', 'Éco'],
-    },
-    {
-      id: 4,
-      name: 'Citroën C1',
-      emoji: '🌈',
-      price: 6900,
-      monthly: 119,
-      image: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800&q=80',
-      electric: false,
-      available: true,
-      location: 'Bordeaux',
-      tags: ['Super prix', 'Fiable', 'Économique'],
-    },
-  ];
+  const cars = citadines;
 
   const toggleFavorite = (id: number) => {
     setFavorites((prev) => (prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]));
+  };
+
+  const toggleFilter = (label: string) => {
+    setActiveFilters((prev) =>
+      prev.includes(label) ? prev.filter((l) => l !== label) : [...prev, label]
+    );
+  };
+
+  const matchesFilter = (car: CitadineCar, label: string) => {
+    switch (label) {
+      case 'Électrique':
+        return car.electric || car.tags.some((t) => /électrique/i.test(t));
+      case 'Petits budgets':
+        return car.price < 8000 || car.tags.includes('Petits budgets');
+      case 'Facile à garer':
+        return car.tags.includes('Facile à garer');
+      case 'Éco':
+        return car.tags.includes('Éco') || car.electric;
+      case 'Weekend':
+        return car.tags.includes('Fun') || car.tags.includes('Parfait ville');
+      case 'Famille':
+        return car.tags.includes('Famille');
+      default:
+        return car.tags.includes(label);
+    }
+  };
+
+  const filteredCars = useMemo(() => {
+    if (activeFilters.length === 0) return cars;
+    return cars.filter((car) => activeFilters.some((f) => matchesFilter(car, f)));
+  }, [cars, activeFilters]);
+
+  const openNotifyModal = (carId: number) => {
+    setNotifyCarId(carId);
+    setNotifyEmail('');
+  };
+
+  const submitNotify = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!notifyCarId) return;
+    const car = cars.find((c) => c.id === notifyCarId);
+    const subject = encodeURIComponent(`Notification disponibilité — ${car?.name}`);
+    const body = encodeURIComponent(
+      `Bonjour,\n\nMerci de me prévenir lorsque ${car?.name} (ID ${car?.id}) sera disponible.\n\nMon email : ${notifyEmail}\n\nCordialement.`
+    );
+    window.location.href = `mailto:contact@bm-valocations.com?subject=${subject}&body=${body}`;
+    setNotifyCarId(null);
+  };
+
+  const submitTestDrive = (e: React.FormEvent) => {
+    e.preventDefault();
+    const subject = encodeURIComponent('Demande essai gratuit — CitaDrive');
+    const body = encodeURIComponent(
+      `Bonjour,\n\nJe souhaite réserver un essai gratuit.\nQuand: ${testDriveWhen}\nEmail: ${testDriveEmail}\n\nMerci.`
+    );
+    window.location.href = `mailto:contact@bm-valocations.com?subject=${subject}&body=${body}`;
+    setTestDriveOpen(false);
   };
 
   return (
@@ -204,15 +222,24 @@ export default function Home() {
             { icon: '💚', label: 'Éco' },
             { icon: '🎒', label: 'Weekend' },
             { icon: '💸', label: 'Petits budgets' },
-          ].map((filter, i) => (
-            <button
-              key={i}
-              className="bg-white hover:bg-orange-50 border-2 border-gray-200 hover:border-orange-300 px-6 py-3 rounded-full font-medium transition flex items-center gap-2 shadow-sm"
-            >
-              <span className="text-xl">{filter.icon}</span>
-              <span>{filter.label}</span>
-            </button>
-          ))}
+          ].map((filter, i) => {
+            const active = activeFilters.includes(filter.label);
+            return (
+              <button
+                key={i}
+                onClick={() => toggleFilter(filter.label)}
+                className={`px-6 py-3 rounded-full font-medium transition flex items-center gap-2 shadow-sm border-2 ${
+                  active
+                    ? 'bg-orange-100 border-orange-300 text-orange-700'
+                    : 'bg-white hover:bg-orange-50 border-gray-200 hover:border-orange-300 text-gray-700'
+                }`}
+                aria-pressed={active}
+              >
+                <span className="text-xl">{filter.icon}</span>
+                <span>{filter.label}</span>
+              </button>
+            );
+          })}
         </div>
       </section>
 
@@ -226,7 +253,7 @@ export default function Home() {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {cars.map((car) => (
+          {filteredCars.map((car) => (
             <div
               key={car.id}
               className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group"
@@ -240,6 +267,7 @@ export default function Home() {
                 <button
                   onClick={() => toggleFavorite(car.id)}
                   className="absolute top-4 right-4 bg-white p-2 rounded-full shadow-lg hover:scale-110 transition"
+                  aria-label={favorites.includes(car.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'}
                 >
                   <Heart
                     size={20}
@@ -287,23 +315,22 @@ export default function Home() {
                   ))}
                 </div>
 
-                <button
-                  className={`w-full py-3 rounded-xl font-medium transition flex items-center justify-center gap-2 ${
-                    car.available
-                      ? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white hover:shadow-lg'
-                      : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  }`}
-                  disabled={!car.available}
-                >
-                  {car.available ? (
-                    <>
-                      <span>Voir les détails</span>
-                      <ArrowRight size={18} />
-                    </>
-                  ) : (
+                {car.available ? (
+                  <button
+                    onClick={() => navigate(`/cars/${car.id}`)}
+                    className="w-full py-3 rounded-xl font-medium transition flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-pink-500 text-white hover:shadow-lg"
+                  >
+                    <span>Voir les détails</span>
+                    <ArrowRight size={18} />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => openNotifyModal(car.id)}
+                    className="w-full py-3 rounded-xl font-medium transition flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+                  >
                     <span>Me prévenir</span>
-                  )}
-                </button>
+                  </button>
+                )}
               </div>
             </div>
           ))}
@@ -357,7 +384,10 @@ export default function Home() {
         <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-3xl p-12 text-center text-white">
           <h2 className="text-4xl font-bold mb-4">Prêt à trouver votre citadine ?</h2>
           <p className="text-xl text-gray-300 mb-8">Essayez gratuitement pendant 24h, sans engagement</p>
-          <button className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-8 py-4 rounded-full text-lg font-medium hover:shadow-2xl transition transform hover:scale-105">
+          <button
+            onClick={() => setTestDriveOpen(true)}
+            className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-8 py-4 rounded-full text-lg font-medium hover:shadow-2xl transition transform hover:scale-105"
+          >
             Réserver un essai gratuit
           </button>
         </div>
@@ -434,6 +464,79 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Notify Modal */}
+      {notifyCarId !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setNotifyCarId(null)} />
+          <div className="relative bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Me prévenir</h3>
+              <button aria-label="Fermer" onClick={() => setNotifyCarId(null)}>
+                <X size={20} />
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 mb-4">
+              Laissez-nous votre email pour être alerté dès que cette voiture est disponible.
+            </p>
+            <form onSubmit={submitNotify} className="space-y-3">
+              <input
+                type="email"
+                required
+                value={notifyEmail}
+                onChange={(e) => setNotifyEmail(e.target.value)}
+                placeholder="Votre email"
+                className="w-full border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-orange-400"
+              />
+              <button
+                type="submit"
+                className="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-white py-3 rounded-xl font-medium hover:shadow-lg transition"
+              >
+                Envoyer
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Test Drive Modal */}
+      {testDriveOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setTestDriveOpen(false)} />
+          <div className="relative bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Réserver un essai gratuit</h3>
+              <button aria-label="Fermer" onClick={() => setTestDriveOpen(false)}>
+                <X size={20} />
+              </button>
+            </div>
+            <form onSubmit={submitTestDrive} className="space-y-3">
+              <input
+                type="email"
+                required
+                value={testDriveEmail}
+                onChange={(e) => setTestDriveEmail(e.target.value)}
+                placeholder="Votre email"
+                className="w-full border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-orange-400"
+              />
+              <input
+                type="text"
+                required
+                value={testDriveWhen}
+                onChange={(e) => setTestDriveWhen(e.target.value)}
+                placeholder="Quand souhaitez-vous essayer ?"
+                className="w-full border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-orange-400"
+              />
+              <button
+                type="submit"
+                className="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-white py-3 rounded-xl font-medium hover:shadow-lg transition"
+              >
+                Envoyer la demande
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -53,6 +53,7 @@ A modern, accessible, and production-ready frontend for a premium car rental ser
 - Security
 - License
 - Brand assets (single source)
+- Funnel marketing & upsell (ebooks) — see docs/FUNNEL_MARKETING_UPSELL.md
 - Acknowledgments
 
 ## Features

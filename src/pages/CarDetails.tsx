@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { MapPin, Zap, ArrowRight, X } from 'lucide-react';
 import { citadines } from '../data/citadines';
-import { insertRow } from '../lib/supabaseClient';
+import { callEdge } from '../lib/api';
 import { track } from '../lib/analytics';
 
 export default function CarDetails() {
@@ -35,12 +35,11 @@ export default function CarDetails() {
   const submitReserve = async (e: React.FormEvent) => {
     e.preventDefault();
     setReserveStatus('loading');
-    const { ok } = await insertRow('test_drives', {
+    const { ok } = await callEdge('test-drive', {
       email: reserveEmail,
       when: reserveWhen,
       car_id: car.id,
       car_name: car.name,
-      created_at: new Date().toISOString(),
       source: 'details',
     });
     if (ok) {

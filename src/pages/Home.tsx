@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Search, MapPin, Zap, Heart, Check, Star, ArrowRight, Phone, Calendar, X } from 'lucide-react';
 import { citadines } from '../data/citadines';
 import type { CitadineCar } from '../types';
-import { insertRow } from '../lib/supabaseClient';
+import { callEdge } from '../lib/api';
 import { track } from '../lib/analytics';
 
 const DEFAULT_BUDGET_CAP = 8000;
@@ -111,11 +111,10 @@ export default function Home() {
     if (!notifyCarId) return;
     setNotifyStatus('loading');
     const car = cars.find((c) => c.id === notifyCarId);
-    const { ok } = await insertRow('notifications', {
+    const { ok } = await callEdge('notify', {
       email: notifyEmail,
       car_id: notifyCarId,
       car_name: car?.name,
-      created_at: new Date().toISOString(),
       source: 'landing',
     });
     if (ok) {
@@ -130,10 +129,9 @@ export default function Home() {
   const submitTestDrive = async (e: React.FormEvent) => {
     e.preventDefault();
     setTestDriveStatus('loading');
-    const { ok } = await insertRow('test_drives', {
+    const { ok } = await callEdge('test-drive', {
       email: testDriveEmail,
       when: testDriveWhen,
-      created_at: new Date().toISOString(),
       source: 'landing',
     });
     if (ok) {

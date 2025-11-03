@@ -5,7 +5,6 @@ import SkipLink from './components/SkipLink';
 import RouteAnnouncer from './components/RouteAnnouncer';
 import RouteFocusHandler from './components/RouteFocusHandler';
 import Footer from './components/Footer';
-import ConstructionNotice from './components/ConstructionNotice';
 
 const Home = lazy(() => import('./pages/Home'));
 const Fleet = lazy(() => import('./pages/Fleet'));
@@ -20,7 +19,6 @@ function AppShell() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
-      <ConstructionNotice />
       <SkipLink />
       {!isHome && (
         <header className="p-6 border-b bg-white">

@@ -540,8 +540,19 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
-            <p>© 2024 CitaDrive. Tous droits réservés.</p>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm space-y-2">
+            <p>© {new Date().getFullYear()} CitaDrive. Tous droits réservés.</p>
+            <p className="text-gray-400">
+              <a href="/mentions-legales" className="hover:text-orange-400 underline">Mentions légales</a>
+              <span className="mx-2" aria-hidden="true">•</span>
+              <a href="https://smarterlogiqueweb.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 underline">
+                Développé par SmarterLogic Web
+              </a>
+              <span className="mx-2" aria-hidden="true">•</span>
+              <a href="https://smarterlogiqueweb.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 underline">
+                Contact
+              </a>
+            </p>
           </div>
         </div>
       </footer>

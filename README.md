@@ -149,7 +149,7 @@ See docs/ACCESSIBILITY.md.
 - PWA via vite-plugin-pwa (manifest + service worker auto-update)
 - robots.txt + sitemap.xml
 
-See docs/SEO_PWA.md.
+See docs/SEO_PWA.md and docs/SEO_LOCAL_AI.md for local SEO & AI-friendly guidelines.
 
 ## CI/CD
 

@@ -16,6 +16,7 @@
     "test": "vitest",
     "test:run": "vitest run",
     "screenshots": "node ./scripts/capture-screenshots.mjs",
+    "audit:site": "node ./scripts/audit-site.mjs",
     "prepare": "husky"
   },
   "lint-staged": {

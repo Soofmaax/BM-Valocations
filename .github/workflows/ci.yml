@@ -17,15 +17,11 @@ jobs:
       - name: Checkout du code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Setup Node.js et installer les dépendances
+        uses: ./.github/actions/setup-node-deps
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
-
-      - name: Installation des dépendances
-        run: npm install
+          prefer-ci: "true"
 
       - name: Type Check (tsc)
         run: npm run typecheck

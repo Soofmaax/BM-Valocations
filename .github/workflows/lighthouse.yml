@@ -35,16 +35,12 @@ jobs:
           temporaryPublicStorage: true
           configPath: ./lighthouserc.json
 
-      - name: Install Node and deps (fallback local)
+      - name: Setup Node.js et installer les dépendances (fallback)
         if: steps.prodcheck.outputs.ok != 'true'
-        uses: actions/setup-node@v4
+        uses: ./.github/actions/setup-node-deps
         with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Install dependencies (fallback)
-        if: steps.prodcheck.outputs.ok != 'true'
-        run: npm ci
+          node-version: "20"
+          prefer-ci: "true"
 
       - name: Build (fallback)
         if: steps.prodcheck.outputs.ok != 'true'

@@ -343,11 +343,15 @@ MIT — see LICENSE.
 
 Place your final logo at public/brand/logo.svg and run npm run build. The prebuild script will generate favicons, Apple Touch Icon and OG images automatically. See docs/BRAND_ASSETS.md.
 
-## Credits / Attribution
+## Développé par
 
-Built by <a href="https://your-agency.tld" target="_blank" rel="noopener noreferrer">Your Agency</a>.
+Ce projet a été conçu et développé par <a href="https://smarterlogiqueweb.com" target="_blank" rel="noopener noreferrer">SmarterLogic Web</a>.
 
-> TODO: Replace “Your Agency” and the URL with your actual agency name and website once available.
+Pour en savoir plus ou pour nous contacter, visitez notre site : <a href="https://smarterlogiqueweb.com" target="_blank" rel="noopener noreferrer">smarterlogiqueweb.com</a>.
+
+- Branding & Identité Visuelle
+- Développement Front-End
+- Optimisation SEO
 
 ## Acknowledgments
 

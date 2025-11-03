@@ -47,12 +47,34 @@ function IconFacebook(props: React.SVGProps<SVGSVGElement>) {
 export default function Footer() {
   return (
     <footer className="mt-12 border-t bg-white">
-      <div className="mx-auto max-w-6xl p-6 flex items-center justify-between">
-        <div className="text-sm text-gray-500">
-          <Link to="/" className="font-medium text-gray-700 hover:underline">
+      <div className="mx-auto max-w-6xl p-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="text-sm text-gray-600 space-x-2">
+          <Link to="/" className="font-medium text-gray-800 hover:underline">
             BM-VA Locations
-          </Link>{' '}
-          © {new Date().getFullYear()}
+          </Link>
+          <span>© {new Date().getFullYear()}</span>
+          <span aria-hidden="true">•</span>
+          <Link to="/mentions-legales" className="hover:underline">
+            Mentions légales
+          </Link>
+          <span aria-hidden="true">•</span>
+          <a
+            href="https://smarterlogiqueweb.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-gray-800 hover:underline"
+          >
+            Développé par SmarterLogic Web
+          </a>
+          <span aria-hidden="true">•</span>
+          <a
+            href="https://smarterlogiqueweb.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline"
+          >
+            Contact
+          </a>
         </div>
 
         <nav aria-label="Social media" className="flex items-center gap-4">

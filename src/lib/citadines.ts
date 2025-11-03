@@ -1,17 +1,31 @@
 import type { CitadineCar } from '../types';
 import { citadines as localCitadines } from '../data/citadines';
 
-const isValidCar = (c: any): c is CitadineCar =>
-  c &&
-  typeof c.id === 'number' &&
-  typeof c.name === 'string' &&
-  typeof c.price === 'number' &&
-  typeof c.monthly === 'number' &&
-  typeof c.image === 'string' &&
-  typeof c.electric === 'boolean' &&
-  typeof c.available === 'boolean' &&
-  typeof c.location === 'string' &&
-  Array.isArray(c.tags);
+function isObject(v: unknown): v is Record<string, unknown> {
+  return v !== null && typeof v === 'object';
+}
+
+const isValidCar = (c: unknown): c is CitadineCar => {
+  if (!isObject(c)) return false;
+  const v = c as Record<string, unknown>;
+  const hasBasicFields =
+    typeof v.id === 'number' &&
+    typeof v.name === 'string' &&
+    typeof v.price === 'number' &&
+    typeof v.monthly === 'number' &&
+    typeof v.image === 'string' &&
+    typeof v.electric === 'boolean' &&
+    typeof v.available === 'boolean' &&
+    typeof v.location === 'string' &&
+    Array.isArray(v.tags);
+  if (!hasBasicFields) return false;
+
+  // Optional fields validation
+  if (v.gallery != null && !Array.isArray(v.gallery)) return false;
+  if (v.specs != null && !isObject(v.specs)) return false;
+
+  return true;
+};
 
 /**
  * Load citadines from a public JSON URL if provided, otherwise fall back to local data.

@@ -2,13 +2,13 @@ import { render, screen } from '@testing-library/react';
 import App from './App';
 
 describe('App', () => {
-  it('renders the heading', () => {
+  it('renders the landing hero', () => {
     render(<App />);
-    expect(screen.getByText(/BM-VA Locations/i)).toBeInTheDocument();
+    expect(screen.getByText(/Votre citadine idéale/i)).toBeInTheDocument();
   });
 
-  it('shows fleet overview stats', () => {
+  it('renders cars section heading', () => {
     render(<App />);
-    expect(screen.getByText(/Total vehicles:/i)).toBeInTheDocument();
+    expect(screen.getByText(/Nos citadines disponibles/i)).toBeInTheDocument();
   });
 });

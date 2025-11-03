@@ -8,9 +8,9 @@ export default function NotFound() {
       className="space-y-8 py-16 text-center animate-fade-in"
     >
       <Helmet>
-        <title>Page not found — BM-VA</title>
+        <title>Page introuvable — BM-VA</title>
         <meta name="robots" content="noindex" />
-        <meta name="description" content="The page you are looking for does not exist." />
+        <meta name="description" content="La page demandée n'existe pas." />
       </Helmet>
 
       <div className="flex flex-col items-center gap-6">

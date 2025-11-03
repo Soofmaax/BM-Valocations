@@ -3,7 +3,7 @@ import ButtonLink from '../components/ui/ButtonLink';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 
 export default function Support() {
-  const description = 'Support and contact information for BM-VA Locations.';
+  const description = 'Support et informations de contact pour BM-VA Locations.';
 
   return (
     <section aria-labelledby="support-heading" className="space-y-6 max-w-xl">
@@ -32,35 +32,37 @@ export default function Support() {
         Support
       </h2>
       <p className="text-gray-600">
-        The client requested no contact form. You can reach us using the information below.
+        Aucun formulaire de contact. Pour toute demande ou problème concernant le site, merci de passer par notre page de contact.
       </p>
 
       <Card aria-labelledby="support-info-title">
         <CardHeader>
           <CardTitle id="support-info-title" className="text-lg">
-            Contact information
+            Informations de contact
           </CardTitle>
         </CardHeader>
         <CardContent>
           <ul className="space-y-2">
             <li>
-              <span className="text-gray-600">Email: </span>
+              <span className="text-gray-600">Site&nbsp;: </span>
               <a
-                href="mailto:hello@bm-va.example.com"
+                href="https://smarterlogiqueweb.com"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="underline hover:no-underline"
               >
-                hello@bm-va.example.com
+                smarterlogiqueweb.com
               </a>
             </li>
             <li>
-              <span className="text-gray-600">Phone: </span>
-              <a href="tel:+33123456789" className="underline hover:no-underline">
-                +33 1 23 45 67 89
+              <span className="text-gray-600">Email&nbsp;: </span>
+              <a href="mailto:contact@smarterlogiqueweb.com" className="underline hover:no-underline">
+                contact@smarterlogiqueweb.com
               </a>
             </li>
             <li>
-              <span className="text-gray-600">Hours: </span>
-              Mon–Fri 9:00–18:00
+              <span className="text-gray-600">Horaires&nbsp;: </span>
+              Lun–Ven 9:00–18:00
             </li>
           </ul>
         </CardContent>
@@ -68,7 +70,7 @@ export default function Support() {
 
       <div>
         <ButtonLink to="/fleet" variant="primary">
-          Browse fleet
+          Voir la flotte
         </ButtonLink>
       </div>
     </section>

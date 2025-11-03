@@ -176,6 +176,75 @@ Deployment checklist (final launch reminders):
 - Replace README badges (CI/Deployment) with real links if not done yet
 - Provide final OG image(s) and favicon(s) if the brand logo is available
 
+---
+
+## Mini‑guide — Mettre à jour la liste des voitures (statique)
+
+Public visé: l’équipe non technique qui souhaite changer les voitures “de temps en temps” sans maintenance continue.
+
+Où se trouve la liste
+- Fichier: `src/data/citadines.ts`
+- C’est un tableau d’objets JavaScript. Chaque objet correspond à une voiture.
+
+Champs disponibles par voiture
+- Obligatoires:
+  - `id` (number, unique), `name` (string), `emoji` (string), `price` (number, en €), `monthly` (number, €/mois)
+  - `image` (URL d’image), `electric` (boolean), `available` (boolean), `location` (string), `tags` (string[])
+- Optionnels:
+  - `gallery` (string[]): plusieurs images
+  - `specs`: `{ seats?: number, doors?: number, transmission?: 'auto' | 'manual', powerKw?: number, rangeKm?: number, trunkLiters?: number }`
+
+Exemple d’entrée
+```ts
+{
+  id: 5,
+  name: 'Peugeot 108',
+  emoji: '🚗',
+  price: 7900,
+  monthly: 139,
+  image: 'https://images.unsplash.com/photo-....?w=800&q=80',
+  gallery: [
+    'https://images.unsplash.com/photo-....?w=1200&q=80',
+    'https://images.unsplash.com/photo-....?w=1200&q=80',
+  ],
+  electric: false,
+  available: true, // si false, le bouton affiche “Me prévenir”
+  location: 'Nice',
+  tags: ['Facile à garer', 'Économique'],
+  specs: { seats: 4, doors: 5, transmission: 'manual', powerKw: 53, trunkLiters: 196 }
+}
+```
+
+Ce que contrôlent certains champs
+- `available: false` → affiche “Me prévenir” et ouvre un formulaire (vous recevez l’email, pas d’auto‑réponse au client)
+- `electric: true` → badge “Électrique” sur la carte
+- `tags` → utilisés par les filtres (ex: “Facile à garer”, “Éco”, “Petits budgets”, “Weekend”, “Famille”)
+
+Comment modifier/ajouter/supprimer une voiture
+1) Ouvrir `src/data/citadines.ts`
+2) Ajouter/éditer/supprimer des objets du tableau `citadines`
+3) Sauvegarder
+
+Aperçu local (facultatif)
+- Lancer le site en local pour vérifier:
+  - `npm install` (première fois)
+  - `npm run dev` → http://localhost:5173
+
+Mettre en ligne
+- Si vous utilisez Vercel/Netlify/GitHub Pages:
+  - Commitez vos changements puis déployez
+- Build statique:
+  - `npm run build` puis servez le dossier `dist/`
+
+Bonnes pratiques
+- Utiliser des images publiques (Unsplash/serveur) avec `?w=1200&q=80` pour de bonnes tailles/qualité
+- Garder des `id` uniques et stables
+- Mettre `available: false` si le véhicule n’est plus disponible pour basculer automatiquement sur “Me prévenir”
+- Ne pas ajouter de secrets (emails/numéros) dans `citadines.ts` (c’est un fichier public)
+
+Option “sans rebuild” (au besoin)
+- Si vous souhaitez éditer la liste sans redéployer, nous pouvons basculer vers un fichier JSON public (hébergé sur un CDN ou GitHub) que vous remplacerez à l’occasion. Demandez à l’équipe technique d’activer ce mode.
+
 ## Screenshots
 
 Add screenshots to showcase UX for your portfolio.

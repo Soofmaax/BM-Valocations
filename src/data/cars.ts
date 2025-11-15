@@ -28,7 +28,7 @@ export async function fetchCars(): Promise<Car[]> {
 }
 
 export async function fetchCarBySlug(slug: string): Promise<Car | null> {
-  const query = `*[_type=="car" && slug.current==$slug][0]{
+  const query = `*[_type=="car" && slug.current==$slug && defined(publishedAt)][0]{
     _id, title, slug, brand, model, year, listingType, price, rentalPricePerDay, mileage, fuel, transmission, status, description, features,
     images[]{ ..., "url": asset->url }
   }`;

@@ -4,6 +4,9 @@ export default defineType({
   name: 'car',
   title: 'Voiture',
   type: 'document',
+  description:
+    'Astuce: commencez par choisir le “Type d’annonce” (Vente ou Location), puis remplissez uniquement le prix qui apparaît. ' +
+    'Renseignez la date “Publication” pour rendre la voiture visible sur le site.',
 
   fieldsets: [
     { name: 'details', title: 'Détails', options: { collapsible: true, collapsed: false } },
@@ -95,8 +98,40 @@ export default defineType({
     }),
 
     defineField({ name: 'mileage', title: 'Kilométrage', type: 'number', fieldset: 'details' }),
-    defineField({ name: 'fuel', title: 'Carburant', type: 'string', fieldset: 'details' }),
-    defineField({ name: 'transmission', title: 'Transmission', type: 'string', fieldset: 'details' }),
+
+    defineField({
+      name: 'fuel',
+      title: 'Carburant',
+      type: 'string',
+      fieldset: 'details',
+      options: {
+        list: [
+          { title: 'Essence', value: 'Essence' },
+          { title: 'Diesel', value: 'Diesel' },
+          { title: 'Hybride', value: 'Hybride' },
+          { title: 'Électrique', value: 'Électrique' },
+          { title: 'GPL', value: 'GPL' },
+          { title: 'Ethanol', value: 'Ethanol' },
+        ],
+        layout: 'dropdown',
+      },
+      description: 'Sélectionnez le type de carburant.',
+    }),
+
+    defineField({
+      name: 'transmission',
+      title: 'Transmission',
+      type: 'string',
+      fieldset: 'details',
+      options: {
+        list: [
+          { title: 'Manuelle', value: 'Manuelle' },
+          { title: 'Automatique', value: 'Automatique' },
+        ],
+        layout: 'dropdown',
+      },
+      description: 'Sélectionnez le type de transmission.',
+    }),
 
     defineField({
       name: 'images',

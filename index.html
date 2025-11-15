@@ -4,12 +4,53 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Fonts sont chargées dynamiquement après consentement (préférences) ou auto-hébergées via /public/fonts -->
     <meta name="description" content="Premium car rental services with BM-VA Locations. Reliable, luxury, and economy vehicles for all your transportation needs." />
     <meta name="keywords" content="car rental, vehicle rental, luxury cars, economy cars, transportation" />
     <title>BM-VA Locations Premium Car Rental Website</title>
+    <script>
+      (function() {
+        try {
+          var CONSENT_KEY = 'bmva_consent_v1';
+          var raw = localStorage.getItem(CONSENT_KEY);
+          var consent = raw ? JSON.parse(raw) : null;
+
+          function injectGoogleFonts() {
+            var l1 = document.createElement('link');
+            l1.rel = 'preconnect';
+            l1.href = 'https://fonts.googleapis.com';
+            document.head.appendChild(l1);
+            var l2 = document.createElement('link');
+            l2.rel = 'preconnect';
+            l2.href = 'https://fonts.gstatic.com';
+            l2.crossOrigin = 'anonymous';
+            document.head.appendChild(l2);
+            var l3 = document.createElement('link');
+            l3.rel = 'stylesheet';
+            l3.href = 'https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap';
+            document.head.appendChild(l3);
+          }
+
+          // Option auto-hébergée: si vous placez les fichiers de police Sora dans /public/fonts,
+          // décommentez le bloc suivant et commentez injectGoogleFonts() pour un chargement local.
+          /*
+          var style = document.createElement('style');
+          style.innerHTML = "@font-face{font-family:Sora;src:url('/fonts/Sora-VariableFont_wght.woff2') format('woff2');font-weight:300 700;font-style:normal;font-display:swap}";
+          document.head.appendChild(style);
+          */
+
+          if (consent && consent.preferences) {
+            injectGoogleFonts();
+          } else {
+            window.addEventListener('bmva:consent:update', function(e) {
+              if (e.detail && e.detail.preferences) {
+                injectGoogleFonts();
+              }
+            });
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

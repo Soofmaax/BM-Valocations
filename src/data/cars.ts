@@ -7,7 +7,9 @@ export type Car = {
   brand?: string;
   model?: string;
   year?: number;
-  price?: number;
+  listingType?: 'sale' | 'rental';
+  price?: number; // sale price
+  rentalPricePerDay?: number; // rental daily price
   mileage?: number;
   fuel?: string;
   transmission?: string;
@@ -19,7 +21,7 @@ export type Car = {
 
 export async function fetchCars(): Promise<Car[]> {
   const query = `*[_type=="car" && defined(publishedAt)] | order(publishedAt desc){
-    _id, title, slug, brand, model, year, price, mileage, fuel, transmission, status, description, features,
+    _id, title, slug, brand, model, year, listingType, price, rentalPricePerDay, mileage, fuel, transmission, status, description, features,
     images[]{ ..., "url": asset->url }
   }`;
   return sanity.fetch(query);

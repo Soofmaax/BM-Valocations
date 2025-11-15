@@ -20,7 +20,26 @@ export default defineType({
     defineField({ name: 'brand', title: 'Marque', type: 'string' }),
     defineField({ name: 'model', title: 'Modèle', type: 'string' }),
     defineField({ name: 'year', title: 'Année', type: 'number' }),
-    defineField({ name: 'price', title: 'Prix (€)', type: 'number' }),
+
+    // Type d'annonce: Vente ou Location
+    defineField({
+      name: 'listingType',
+      title: 'Type d\'annonce',
+      type: 'string',
+      options: { list: [
+        { title: 'Vente', value: 'sale' },
+        { title: 'Location', value: 'rental' },
+      ]},
+      initialValue: 'rental',
+      validation: r => r.required(),
+    }),
+
+    // Prix de vente
+    defineField({ name: 'price', title: 'Prix de vente (€)', type: 'number' }),
+
+    // Prix location / jour
+    defineField({ name: 'rentalPricePerDay', title: 'Prix location / jour (€)', type: 'number' }),
+
     defineField({ name: 'mileage', title: 'Kilométrage', type: 'number' }),
     defineField({ name: 'fuel', title: 'Carburant', type: 'string' }),
     defineField({ name: 'transmission', title: 'Transmission', type: 'string' }),

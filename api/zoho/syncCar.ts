@@ -52,7 +52,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (!id) return res.status(200).json({ ok: true, skipped: true, reason: 'no car document' });
       const sanity = getSanityClient();
       car = await sanity.fetch(
-        '*[_type=="car" && _id==$id][0]{_id,title,slug,brand,model,year,price,mileage,fuel,transmission,status,features,description}',
+        '*[_type=="car" && _id==$id][0]{_id,title,slug,brand,model,year,listingType,price,rentalPricePerDay,mileage,fuel,transmission,status,features,description}',
         { id }
       );
       if (!car) return res.status(200).json({ ok: true, skipped: true, reason: 'car not found' });
@@ -76,6 +76,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         Transmission: car.transmission,
         Car_Status: car.status,
         Features: Array.isArray(car.features) ? car.features.join(', ') : undefined,
+        Listing_Type: car.listingType,
+        Rental_Price_Per_Day: car.rentalPricePerDay,
       }],
       duplicate_check_fields: ['Product_Code'],
     };

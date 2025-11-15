@@ -3,6 +3,7 @@ import { Routes, Route, Link, NavLink } from 'react-router-dom';
 import Privacy from './pages/Privacy';
 import Cookies from './pages/Cookies';
 import CarsList from './pages/CarsList';
+import CarDetail from './pages/CarDetail';
 import { ConsentManager, ConsentLink } from './components/ConsentManager';
 import AnalyticsManager from './components/AnalyticsManager';
 import ChatManager from './components/ChatManager';
@@ -44,6 +45,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/cars" element={<CarsList />} />
+        <Route path="/cars/:slug" element={<CarDetail />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/cookies" element={<Cookies />} />
         <Route path="*" element={

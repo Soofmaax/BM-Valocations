@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { Car } from '../data/cars';
 import LeadForm from './LeadForm';
+import { Link } from 'react-router-dom';
 
 type Props = {
   car: Car;
@@ -16,16 +17,26 @@ export default function CarCard({ car }: Props) {
 
   const badge = car.listingType === 'rental' ? 'À louer' : 'À vendre';
 
+  const to = car.slug?.current ? `/cars/${car.slug.current}` : undefined;
+
   return (
     <div className="border rounded-lg overflow-hidden shadow-sm bg-white">
       {img && (
         <div className="aspect-video bg-gray-100">
-          <img src={img} alt={car.title} className="w-full h-full object-cover" />
+          {to ? (
+            <Link to={to} aria-label={`Voir ${car.title}`}>
+              <img src={img} alt={car.title} className="w-full h-full object-cover" />
+            </Link>
+          ) : (
+            <img src={img} alt={car.title} className="w-full h-full object-cover" />
+          )}
         </div>
       )}
       <div className="p-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">{car.title}</h3>
+          <h3 className="text-lg font-semibold">
+            {to ? <Link to={to}>{car.title}</Link> : car.title}
+          </h3>
           <span className="text-xs px-2 py-1 rounded bg-gray-100">{badge}</span>
         </div>
         <div className="mt-2 text-sm text-gray-600">
@@ -41,9 +52,16 @@ export default function CarCard({ car }: Props) {
 
         <div className="mt-4">
           {!showForm ? (
-            <button className="px-4 py-2 bg-black text-white rounded" onClick={() => setShowForm(true)}>
-              Demander des informations
-            </button>
+            <div className="flex gap-2">
+              {to && (
+                <Link to={to} className="px-4 py-2 border rounded">
+                  Voir détail
+                </Link>
+              )}
+              <button className="px-4 py-2 bg-black text-white rounded" onClick={() => setShowForm(true)}>
+                Demander des informations
+              </button>
+            </div>
           ) : (
             <div className="mt-2">
               <LeadForm carTitle={car.title} />

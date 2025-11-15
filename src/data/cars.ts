@@ -26,3 +26,11 @@ export async function fetchCars(): Promise<Car[]> {
   }`;
   return sanity.fetch(query);
 }
+
+export async function fetchCarBySlug(slug: string): Promise<Car | null> {
+  const query = `*[_type=="car" && slug.current==$slug][0]{
+    _id, title, slug, brand, model, year, listingType, price, rentalPricePerDay, mileage, fuel, transmission, status, description, features,
+    images[]{ ..., "url": asset->url }
+  }`;
+  return sanity.fetch(query, { slug });
+}

@@ -6,6 +6,7 @@ import { ConsentManager, ConsentLink } from './components/ConsentManager';
 import AnalyticsManager from './components/AnalyticsManager';
 import ChatManager from './components/ChatManager';
 import { initUTMTracker } from './utils/utm';
+import LeadForm from './components/LeadForm';
 
 function Home() {
   return (
@@ -18,6 +19,11 @@ function Home() {
       </div>
       <div className="mt-6">
         <ConsentLink />
+      </div>
+
+      <div className="mt-10 border-t pt-6">
+        <h2 className="text-xl font-semibold mb-3">Demande d’information</h2>
+        <LeadForm carTitle="Demande générale" />
       </div>
     </div>
   );

@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "studio:dev": "sanity dev --cwd sanity",
+    "studio:build": "sanity build --cwd sanity",
+    "studio:deploy": "sanity deploy --cwd sanity"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",

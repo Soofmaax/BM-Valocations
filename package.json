@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "studio:dev": "sanity dev --cwd sanity",
+    "studio:build": "sanity build --cwd sanity",
+    "studio:deploy": "sanity deploy --cwd sanity"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",
@@ -15,7 +18,10 @@
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^7.9.1"
+    "react-router-dom": "^7.9.1",
+    "@sanity/client": "^6.21.2",
+    "groq": "^3.54.0",
+    "sanity": "^3.58.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",

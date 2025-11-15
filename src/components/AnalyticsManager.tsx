@@ -7,6 +7,7 @@ export default function AnalyticsManager() {
       if (consent?.analytics) {
         const plausibleDomain = import.meta.env.VITE_PLAUSIBLE_DOMAIN as string | undefined;
         const ga4 = import.meta.env.VITE_GA4_ID as string | undefined;
+        const clarityId = import.meta.env.VITE_CLARITY_ID as string | undefined;
 
         if (plausibleDomain) {
           await loadScript('https://plausible.io/js/script.js', { 'data-domain': plausibleDomain });
@@ -24,6 +25,10 @@ export default function AnalyticsManager() {
             (window as any).gtag('js', new Date());
             (window as any).gtag('config', ga4);
           }
+        }
+
+        if (clarityId) {
+          await loadScript(`https://www.clarity.ms/tag/${clarityId}`);
         }
       }
     };

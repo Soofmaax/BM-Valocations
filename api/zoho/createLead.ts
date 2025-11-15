@@ -20,7 +20,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
 
   try {
-    const { name, email, phone, message, carTitle, marketingConsent, policyVersion } = req.body ?? {};
+    const {
+      name,
+      email,
+      phone,
+      message,
+      carTitle,
+      marketingConsent,
+      policyVersion,
+      // UTM tracking (optionnels)
+      utm_source,
+      utm_medium,
+      utm_campaign,
+      utm_content,
+      utm_term,
+    } = req.body ?? {};
+
     const access = await getAccessToken();
 
     const now = new Date().toISOString();
@@ -32,10 +47,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         Phone: phone,
         Description: message ? `${message} | Voiture: ${carTitle}` : `Voiture: ${carTitle}`,
         Lead_Source: 'Website',
-        // Champs custom pour journaliser le consentement (à créer dans Zoho si besoin)
+        // Champs custom RGPD (crée-les dans Zoho avec ces API names)
         Consent_Status: marketingConsent ? 'Consented' : 'Not Consented',
         Consent_Timestamp: now,
         Consent_Policy_Version: policyVersion || '1.0',
+        // UTM (champs custom à créer côté Zoho avec ces API names)
+        utm_source,
+        utm_medium,
+        utm_campaign,
+        utm_content,
+        utm_term,
       }],
       trigger: ['workflow'],
     };
